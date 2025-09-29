@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Club Deportivo</string>
+    <string name="username_label">USUARIO</string>
+    <string name="password_label">PASSWORD</string>
+    <string name="login_button">INICIAR SESIÓN</string>
+    <string name="logo_description">Logo del club deportivo</string>
+    <string name="login_title">SISTEMA DE GESTIÓN\n DEL\n CLUB DEPORTIVO</string>
+</resources>
