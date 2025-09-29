@@ -3,7 +3,6 @@ package com.aislados.clubdeportivo
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -12,7 +11,6 @@ import com.aislados.clubdeportivo.database.UserDAO
 import com.aislados.clubdeportivo.model.User
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
-import kotlin.text.clear
 
 class Login : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
