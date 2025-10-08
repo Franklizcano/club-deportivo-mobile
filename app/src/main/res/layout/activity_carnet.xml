@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_dark_variant"
+    tools:context=".CarnetActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:src="@drawable/bg_header_ellipse"
+        android:layout_marginTop="-100dp"
+        android:contentDescription="@null"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/header_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/entrega_carnet_title"
+                android:textColor="@color/main_accent"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_marginEnd="16dp"
+                android:contentDescription="@string/logo_description"
+                android:src="@drawable/logo_small" />
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="75dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/form_background"
+                android:padding="24dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_dni_carnet"
+                    style="@style/FormInputLayout"
+                    app:endIconMode="custom"
+                    app:endIconDrawable="@drawable/ic_search"
+                    app:endIconTint="@color/color_light_gray"
+                    android:hint="@string/form_dni">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_dni_carnet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:textColor="@color/text_white"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/FormInputLayout"
+                    android:layout_marginTop="16dp"
+                    android:enabled="false"
+                    android:hint="@string/form_nombre">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_nombre_carnet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:textColor="@color/color_light_gray"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/FormInputLayout"
+                    android:layout_marginTop="16dp"
+                    android:enabled="false"
+                    android:hint="@string/form_apellido">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_apellido_carnet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:textColor="@color/color_light_gray"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/FormInputLayout"
+                    android:layout_marginTop="16dp"
+                    android:enabled="false"
+                    android:hint="@string/form_estado">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_estado_carnet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:textColor="@color/color_light_gray"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_emitir_carnet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    style="@style/PrimaryButton.Dark"
+                    android:text="@string/form_emitir_carnet"/>
+
+            </LinearLayout>
+        </ScrollView>
+
+        <include layout="@layout/layout_bottom_navigation"/>
+
+    </LinearLayout>
+</FrameLayout>

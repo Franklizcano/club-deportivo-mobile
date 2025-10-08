@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bottom_navigation_bar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/background_dark"
+    android:elevation="4dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+
+    <LinearLayout
+        android:id="@+id/btn_atras"
+        style="@style/BottomNavOption">
+        <ImageView
+            style="@style/BottomNavOption.Icon"
+            android:src="@drawable/ic_back_arrow"
+            android:contentDescription="@string/bottom_nav_back"
+            android:clickable="false"
+            android:focusable="false" />
+        <TextView
+            style="@style/BottomNavOption.Text"
+            android:text="@string/bottom_nav_back"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/btn_menu_principal"
+        style="@style/BottomNavOption">
+        <ImageView
+            style="@style/BottomNavOption.Icon"
+            android:src="@drawable/ic_home"
+            android:contentDescription="@string/bottom_nav_home"
+            android:clickable="false"
+            android:focusable="false" />
+        <TextView
+            style="@style/BottomNavOption.Text"
+            android:text="@string/bottom_nav_home"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/btn_cerrar_sesion"
+        style="@style/BottomNavOption">
+        <ImageView
+            style="@style/BottomNavOption.Icon"
+            android:src="@drawable/ic_logout_app"
+            android:contentDescription="@string/bottom_nav_logout"
+            android:clickable="false"
+            android:focusable="false" />
+        <TextView
+            style="@style/BottomNavOption.Text"
+            android:text="@string/bottom_nav_logout"/>
+    </LinearLayout>
+
+</LinearLayout>

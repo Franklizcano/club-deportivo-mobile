@@ -5,5 +5,51 @@
     <string name="login_button">INICIAR SESIÓN</string>
     <string name="logo_description">Logo del club deportivo</string>
     <string name="login_title">SISTEMA DE GESTIÓN\n DEL\n CLUB DEPORTIVO</string>
-    <string name="menu_principal_title">MENÚ\n PRINCIPAL</string>
+    <string name="menu_principal_title">MENÚ\nPRINCIPAL</string>
+    <string name="menu_registro">Registro</string>
+    <string name="menu_carnet">Entregar Carnet</string>
+    <string name="menu_pago">Cobro</string>
+    <string name="menu_cuotas">Cuotas Vencidas</string>
+    <string name="description_logout">Cerrar sesión</string>
+
+    <string name="registro_title">REGISTRO</string>
+    <string name="registro_socio">SOCIO</string>
+    <string name="registro_no_socio">NO SOCIO</string>
+
+    <string name="bottom_nav_back">Atrás</string>
+    <string name="bottom_nav_home">Menú Principal</string>
+    <string name="bottom_nav_logout">Cerrar Sesión</string>
+
+    <string name="alta_socio_title">ALTA SOCIO</string>
+    <string name="form_nombre">Nombre</string>
+    <string name="form_apellido">Apellido</string>
+    <string name="form_dni">DNI</string>
+    <string name="form_fecha_nacimiento">Fecha de nacimiento</string>
+    <string name="form_apto_fisico">Apto Físico</string>
+    <string name="form_registrar_alta">REGISTRAR ALTA</string>
+
+    <string name="mtrl_picker_text_input_date_format" translatable="false">dd/MM/yyyy</string>
+
+    <string name="alta_no_socio_title">ALTA NO SOCIO</string>
+    <string name="form_domicilio">Domicilio</string>
+    <string name="form_telefono">Teléfono</string>
+    <string name="form_email">Email</string>
+    <string name="form_actividad">Actividad</string>
+
+    <string name="entrega_carnet_title">ENTREGA DE CARNET</string>
+    <string name="form_estado">Estado</string>
+    <string name="form_emitir_carnet">EMITIR CARNET</string>
+
+    <string name="cobro_cuota_socio_title">COBRO DE CUOTA</string>
+    <string name="cobro_actividad_no_socio_title">COBRO ACTIVIDAD NO SOCIO</string>
+    <string name="toggle_socio">SOCIO</string>
+    <string name="toggle_no_socio">NO SOCIO</string>
+    <string name="form_ultima_cuota_paga">Última cuota paga</string>
+    <string name="form_fecha_vencimiento">Fecha de vencimiento</string>
+    <string name="form_metodo_pago">Método de pago</string>
+    <string name="form_monto">Monto</string>
+    <string name="form_registrar_pago">REGISTRAR PAGO</string>
+
+    <string name="cuotas_vencidas_title">CUOTAS VENCIDAS</string>
+    <string name="form_buscar_socio">Buscar Socio</string>
 </resources>
