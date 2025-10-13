@@ -1,8 +1,122 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+
     <style name="Base.Theme.ClubDeportivo" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary_orange</item>
     </style>
 
     <style name="Theme.ClubDeportivo" parent="Base.Theme.ClubDeportivo" />
+
+
+    <style name="FormInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="boxStrokeColor">@color/main_accent</item>
+        <item name="hintTextColor">@color/main_accent</item>
+        <item name="android:textColorHint">@color/color_light_gray</item>
+        <item name="textInputStyle">@style/FormInputEditText</item>
+    </style>
+
+    <style name="FormInputEditText" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
+        <item name="android:textAppearance">@style/FormInputEditText.TextAppearance</item>
+    </style>
+
+    <style name="FormInputEditText.TextAppearance" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">@color/text_white</item>
+    </style>
+
+    <style name="FormCheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:textColor">@color/text_white</item>
+        <item name="buttonTint">@color/main_accent</item>
+    </style>
+
+
+    <style name="MyMaterialCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="materialCalendarHeaderToggleButton">@style/MyMaterialCalendarToggleButton</item>
+    </style>
+
+    <style name="MyMaterialCalendarToggleButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog.Flush">
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="MainMenuOption">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@drawable/bg_menu_option</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="MainMenuOption.Icon">
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">64dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:tint">@color/white</item>
+        <item name="android:clickable">false</item>
+    </style>
+
+    <style name="MainMenuOption.Text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text_white</item>
+        <item name="android:textSize">18sp</item> <item name="android:clickable">false</item>
+    </style>
+
+    <style name="PrimaryButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:backgroundTint">@color/main_accent</item>
+        <item name="android:textColor">@color/background_dark</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingStart">32dp</item>
+        <item name="android:paddingEnd">32dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+    </style>
+
+    <style name="PrimaryButton.Dark" parent="PrimaryButton">
+        <item name="android:backgroundTint">@color/background_dark</item>
+        <item name="android:textColor">@color/text_white</item>
+        <item name="strokeColor">@color/main_accent</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <style name="BottomNavOption">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="BottomNavOption.Icon">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:tint">@color/text_white</item>
+    </style>
+
+    <style name="BottomNavOption.Text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text_white</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="ShapeAppearance.App.SoftRoundedSquare" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">24dp</item>
+    </style>
+
+    <style name="Widget.App.Button.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">@color/text_white</item>
+        <item name="strokeColor">@color/main_accent</item>
+    </style>
+
 </resources>

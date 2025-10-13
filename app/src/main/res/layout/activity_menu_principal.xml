@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -7,28 +8,134 @@
     android:layout_height="match_parent"
     tools:context=".MenuPrincipal"
     android:orientation="vertical"
-    android:background="@color/background_dark"
-    android:gravity="center_horizontal">
+    android:background="@drawable/bg_main_gradient">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/menu_principal_title"
-        android:textColor="@color/primary_orange"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:layout_marginTop="200dp"
-        android:textAlignment="center" />
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp">
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+        <ImageView
+            android:id="@+id/iv_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_logout"
+            android:padding="8dp"
+            android:contentDescription="@string/description_logout"
+            app:tint="@color/main_accent" />
+    </LinearLayout>
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="45dp"
-        android:src="@drawable/logo"
-        android:contentDescription="@string/logo_description"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:gravity="center"
+                android:text="@string/menu_principal_title"
+                android:textColor="@color/main_accent"
+                android:textSize="34sp"
+                android:textStyle="bold" />
+ad
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/iv_logo"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="60dp"
+                android:contentDescription="@string/logo_description"
+                android:src="@drawable/logo"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.App.SoftRoundedSquare" />
 
+            <LinearLayout
+                android:id="@+id/bottom_menu_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="60dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/btn_registro"
+                        style="@style/MainMenuOption"
+                        android:layout_marginEnd="8dp">
+                        <ImageView
+                            style="@style/MainMenuOption.Icon"
+                            android:src="@drawable/ic_person_add"
+                            android:contentDescription="@string/menu_registro"/>
+                        <TextView
+                            style="@style/MainMenuOption.Text"
+                            android:text="@string/menu_registro"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btn_carnet"
+                        style="@style/MainMenuOption"
+                        android:layout_marginStart="8dp">
+                        <ImageView
+                            style="@style/MainMenuOption.Icon"
+                            android:src="@drawable/ic_card"
+                            android:contentDescription="@string/menu_carnet"/>
+                        <TextView
+                            style="@style/MainMenuOption.Text"
+                            android:text="@string/menu_carnet"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="16dp">
+
+                    <LinearLayout
+                        android:id="@+id/btn_pago"
+                        style="@style/MainMenuOption"
+                        android:layout_marginEnd="8dp">
+                        <ImageView
+                            style="@style/MainMenuOption.Icon"
+                            android:src="@drawable/ic_download"
+                            android:contentDescription="@string/menu_pago"/>
+                        <TextView
+                            style="@style/MainMenuOption.Text"
+                            android:text="@string/menu_pago"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btn_cuotas"
+                        style="@style/MainMenuOption"
+                        android:layout_marginStart="8dp">
+                        <ImageView
+                            style="@style/MainMenuOption.Icon"
+                            android:src="@drawable/ic_calendar"
+                            android:contentDescription="@string/menu_cuotas"/>
+                        <TextView
+                            style="@style/MainMenuOption.Text"
+                            android:text="@string/menu_cuotas"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
