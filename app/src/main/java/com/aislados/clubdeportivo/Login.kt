@@ -9,6 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.aislados.clubdeportivo.database.UserDAO
 import com.aislados.clubdeportivo.model.User
+import com.aislados.clubdeportivo.model.UserRole
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 
@@ -27,8 +28,6 @@ class Login : AppCompatActivity() {
         username.requestFocus()
 
         val userTable = UserDAO(this)
-        val userTest = User("admin", "admin")
-        userTable.createUser(userTest)
 
         val button = findViewById<Button>(R.id.button)
         button.setOnClickListener {
@@ -38,10 +37,10 @@ class Login : AppCompatActivity() {
                 Snackbar.make(findViewById(R.id.main), "¡Bienvenido!", Snackbar.LENGTH_SHORT).show()
                 Intent(this, MenuPrincipal::class.java)
                     .also { startActivity(it) }
+                finish()
             } else {
                 Snackbar.make(findViewById(R.id.main), "Usuario o contraseña incorrectos", Snackbar.LENGTH_LONG)
                     .setAction("Reintentar") {
-                        // Limpiar campos
                         username.text?.clear()
                         password.text?.clear()
                         username.requestFocus()

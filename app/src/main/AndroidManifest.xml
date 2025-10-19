@@ -28,8 +28,6 @@
         <activity
             android:name=".CobroActivity" />
         <activity
-            android:name=".CobroActivity" />
-        <activity
             android:name=".CuotasActivity" />
         <activity
             android:name=".Login"

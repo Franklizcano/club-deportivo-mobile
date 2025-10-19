@@ -25,6 +25,8 @@
     <string name="form_apellido">Apellido</string>
     <string name="form_dni">DNI</string>
     <string name="form_fecha_nacimiento">Fecha de nacimiento</string>
+    <string name="form_usuario">Usuario</string>
+    <string name="form_password">Contraseña</string>
     <string name="form_apto_fisico">Apto Físico</string>
     <string name="form_registrar_alta">REGISTRAR ALTA</string>
 

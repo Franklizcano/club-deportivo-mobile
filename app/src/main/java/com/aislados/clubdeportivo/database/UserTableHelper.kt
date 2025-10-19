@@ -7,13 +7,15 @@ object UserTableHelper {
     const val COLUMN_ID = "id"
     const val COLUMN_USERNAME = "username"
     const val COLUMN_PASSWORD = "password"
+    const val COLUMN_ROLE = "role"
 
     fun createTable(db: SQLiteDatabase?) {
         val createTable = """
             CREATE TABLE $TABLE_NAME (
                 $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 $COLUMN_USERNAME VARCHAR(100) NOT NULL,
-                $COLUMN_PASSWORD VARCHAR(100) NOT NULL
+                $COLUMN_PASSWORD VARCHAR(100) NOT NULL,
+                $COLUMN_ROLE VARCHAR(50) NOT NULL
             )
         """.trimIndent()
         db?.execSQL(createTable)

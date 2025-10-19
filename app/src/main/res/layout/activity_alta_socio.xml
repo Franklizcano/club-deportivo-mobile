@@ -148,6 +148,30 @@
                         android:textColor="@color/text_white"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/FormInputLayout"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/form_usuario">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_username"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textVisiblePassword|textNoSuggestions"
+                        android:textColor="@color/text_white"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/FormInputLayout"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/form_password">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textVisiblePassword"
+                        android:textColor="@color/text_white"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.checkbox.MaterialCheckBox
                     android:id="@+id/cb_apto_fisico"
                     style="@style/FormCheckBox"
