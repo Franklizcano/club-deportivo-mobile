@@ -8,17 +8,19 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     companion object {
         const val DATABASE_NAME = "club_deportivo.db"
-        const val DATABASE_VERSION = 4
+        const val DATABASE_VERSION = 5
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
         UserTableHelper.createTable(db)
         SocioTableHelper.createTable(db)
+        CuotaTableHelper.createTable(db)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         UserTableHelper.dropTable(db)
         SocioTableHelper.dropTable(db)
+        CuotaTableHelper.dropTable(db)
         onCreate(db)
     }
 }

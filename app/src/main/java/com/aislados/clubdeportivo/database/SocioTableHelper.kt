@@ -1,5 +1,7 @@
 package com.aislados.clubdeportivo.database
 
+import android.database.sqlite.SQLiteDatabase
+
 object SocioTableHelper {
     const val TABLE_NAME = "socios"
     const val COLUMN_ID = "id"
@@ -12,7 +14,7 @@ object SocioTableHelper {
     const val COLUMN_EMAIL = "email"
     const val COLUMN_APTO_FISICO = "apto_fisico"
 
-    fun createTable(db: android.database.sqlite.SQLiteDatabase?) {
+    fun createTable(db: SQLiteDatabase?) {
         val createTable = """
             CREATE TABLE $TABLE_NAME (
                 $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -29,7 +31,7 @@ object SocioTableHelper {
         db?.execSQL(createTable)
     }
 
-    fun dropTable(db: android.database.sqlite.SQLiteDatabase?) {
+    fun dropTable(db: SQLiteDatabase?) {
         db?.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
     }
 }

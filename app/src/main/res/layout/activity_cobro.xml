@@ -138,7 +138,7 @@
                         app:endIconMode="custom"
                         app:endIconDrawable="@drawable/ic_calendar"
                         app:endIconTint="@color/color_light_gray"
-                        android:hint="@string/form_ultima_cuota_paga">
+                        android:hint="@string/form_fecha_ultimo_pago">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/et_ultima_cuota"
                             android:layout_width="match_parent"

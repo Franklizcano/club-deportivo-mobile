@@ -1,20 +1,21 @@
 package com.aislados.clubdeportivo.database
 
-class SocioDAO(private val context: android.content.Context) {
+import android.content.ContentValues
+import android.content.Context
+import android.database.sqlite.SQLiteDatabase
+import com.aislados.clubdeportivo.model.Socio
 
-    fun getWritableDatabase(): android.database.sqlite.SQLiteDatabase {
-        return DatabaseHelper(context).writableDatabase
-    }
+class SocioDAO(private val context: Context) {
 
-    fun getReadableDatabase(): android.database.sqlite.SQLiteDatabase {
-        return DatabaseHelper(context).readableDatabase
-    }
+    fun getWritableDatabase(): SQLiteDatabase = DatabaseHelper(context).writableDatabase
 
-    fun createSocio(socio: com.aislados.clubdeportivo.model.Socio): Boolean {
-        var db: android.database.sqlite.SQLiteDatabase? = null
+    fun getReadableDatabase(): SQLiteDatabase = DatabaseHelper(context).readableDatabase
+
+    fun createSocio(socio: Socio): Boolean {
+        var db: SQLiteDatabase? = null
         return try {
             db = getWritableDatabase()
-            val contentValues = android.content.ContentValues().apply {
+            val contentValues = ContentValues().apply {
                 put(SocioTableHelper.COLUMN_NOMBRE, socio.nombre)
                 put(SocioTableHelper.COLUMN_APELLIDO, socio.apellido)
                 put(SocioTableHelper.COLUMN_DNI, socio.dni)
@@ -49,6 +50,37 @@ class SocioDAO(private val context: android.content.Context) {
             false
         } finally {
             db.close()
+        }
+    }
+
+    fun findSocioByDni(dni: Int): Socio? {
+        return try {
+            getReadableDatabase().use { db ->
+                db.query(
+                    SocioTableHelper.TABLE_NAME,
+                    null,
+                    "${SocioTableHelper.COLUMN_DNI} = ?",
+                    arrayOf(dni.toString()),
+                    null, null, null
+                ).use { cursor ->
+                    if (cursor.moveToFirst()) {
+                        Socio(
+                            id = cursor.getInt(cursor.getColumnIndexOrThrow(SocioTableHelper.COLUMN_ID)),
+                            nombre = cursor.getString(cursor.getColumnIndexOrThrow(SocioTableHelper.COLUMN_NOMBRE)),
+                            apellido = cursor.getString(cursor.getColumnIndexOrThrow(SocioTableHelper.COLUMN_APELLIDO)),
+                            dni = cursor.getInt(cursor.getColumnIndexOrThrow(SocioTableHelper.COLUMN_DNI)),
+                            fechaNacimiento = java.time.LocalDate.parse(cursor.getString(cursor.getColumnIndexOrThrow(SocioTableHelper.COLUMN_FECHA_NACIMIENTO))),
+                            domicilio = cursor.getString(cursor.getColumnIndexOrThrow(SocioTableHelper.COLUMN_DOMICILIO)),
+                            telefono = cursor.getString(cursor.getColumnIndexOrThrow(SocioTableHelper.COLUMN_TELEFONO)),
+                            email = cursor.getString(cursor.getColumnIndexOrThrow(SocioTableHelper.COLUMN_EMAIL)),
+                            aptoFisico = cursor.getInt(cursor.getColumnIndexOrThrow(SocioTableHelper.COLUMN_APTO_FISICO)) == 1
+                        )
+                    } else null
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
         }
     }
 }

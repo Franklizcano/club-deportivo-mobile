@@ -46,7 +46,7 @@
     <string name="cobro_actividad_no_socio_title">COBRO ACTIVIDAD NO SOCIO</string>
     <string name="toggle_socio">SOCIO</string>
     <string name="toggle_no_socio">NO SOCIO</string>
-    <string name="form_ultima_cuota_paga">Última cuota paga</string>
+    <string name="form_fecha_ultimo_pago">Fecha último pago</string>
     <string name="form_fecha_vencimiento">Fecha de vencimiento</string>
     <string name="form_metodo_pago">Método de pago</string>
     <string name="form_monto">Monto</string>

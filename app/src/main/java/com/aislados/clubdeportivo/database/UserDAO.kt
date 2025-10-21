@@ -8,13 +8,9 @@ import com.aislados.clubdeportivo.model.UserRole
 
 class UserDAO(private val context: Context) {
 
-    private fun getWritableDatabase(): SQLiteDatabase {
-        return DatabaseHelper(context).writableDatabase
-    }
+    private fun getWritableDatabase(): SQLiteDatabase = DatabaseHelper(context).writableDatabase
 
-    private fun getReadableDatabase(): SQLiteDatabase {
-        return DatabaseHelper(context).readableDatabase
-    }
+    private fun getReadableDatabase(): SQLiteDatabase = DatabaseHelper(context).readableDatabase
 
     fun createUser(user: User): Boolean {
         var db: SQLiteDatabase? = null
@@ -35,33 +31,39 @@ class UserDAO(private val context: Context) {
         }
     }
 
-    //TODO: modificar el codigo para tambien validar usuario y contraseña en el login
-    fun findUser(username: String): User? {
-        var db: SQLiteDatabase? = null
-        var cursor: android.database.Cursor? = null
-
+    private fun findUserByQuery(selection: String, selectionArgs: Array<String>): User? {
         return try {
-            db = getReadableDatabase()
-            val query = "SELECT * FROM ${UserTableHelper.TABLE_NAME} WHERE ${UserTableHelper.COLUMN_USERNAME} = ?"
-            cursor = db.rawQuery(query, arrayOf(username))
-
-            if (cursor.moveToFirst()) {
-                val roleString = cursor.getString(cursor.getColumnIndexOrThrow(UserTableHelper.COLUMN_ROLE))
-                User(
-                    username = cursor.getString(cursor.getColumnIndexOrThrow(UserTableHelper.COLUMN_USERNAME)),
-                    password = cursor.getString(cursor.getColumnIndexOrThrow(UserTableHelper.COLUMN_PASSWORD)),
-                    role = UserRole.valueOf(roleString)
-                )
-            } else {
-                null
+            getReadableDatabase().use { db ->
+                val query = "SELECT * FROM ${UserTableHelper.TABLE_NAME} WHERE $selection"
+                db.rawQuery(query, selectionArgs).use { cursor ->
+                    if (cursor.moveToFirst()) {
+                        val roleString = cursor.getString(cursor.getColumnIndexOrThrow(UserTableHelper.COLUMN_ROLE))
+                        User(
+                            username = cursor.getString(cursor.getColumnIndexOrThrow(UserTableHelper.COLUMN_USERNAME)),
+                            password = cursor.getString(cursor.getColumnIndexOrThrow(UserTableHelper.COLUMN_PASSWORD)),
+                            role = UserRole.valueOf(roleString)
+                        )
+                    } else null
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
             null
-        } finally {
-            cursor?.close()
-            db?.close()
         }
+    }
+
+    fun findUser(username: String): User? {
+        val selection = "${UserTableHelper.COLUMN_USERNAME} = ?"
+        return findUserByQuery(selection, arrayOf(username))
+    }
+
+    fun findUser(username: String, password: String): User? {
+        val selection = "${UserTableHelper.COLUMN_USERNAME} = ? AND ${UserTableHelper.COLUMN_PASSWORD} = ?"
+        return findUserByQuery(selection, arrayOf(username, password))
+    }
+
+    fun existsUser(username: String, password: String): Boolean {
+        return findUser(username, password) != null
     }
 
     fun existsUser(username: String): Boolean {
