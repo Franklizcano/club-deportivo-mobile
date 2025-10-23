@@ -5,8 +5,7 @@ import android.os.Bundle
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.aislados.clubdeportivo.database.SocioDAO
-import com.aislados.clubdeportivo.database.UserDAO
+import com.aislados.clubdeportivo.database.AppDatabase
 import com.aislados.clubdeportivo.model.Socio
 import com.aislados.clubdeportivo.model.User
 import com.aislados.clubdeportivo.model.UserRole
@@ -16,11 +15,11 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 class AltaSocioActivity : AppCompatActivity() {
 
@@ -35,8 +34,10 @@ class AltaSocioActivity : AppCompatActivity() {
     private lateinit var etPassword: TextInputEditText
     private lateinit var btnRegistrarAlta: MaterialButton
     private lateinit var cbAptoFisico: MaterialCheckBox
-    val userTable = UserDAO(this)
-    val socioTable = SocioDAO(this)
+
+    val database = AppDatabase.getDatabase(this)
+    val userDao = database.userDao()
+    val socioDao = database.socioDao()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,7 +90,7 @@ class AltaSocioActivity : AppCompatActivity() {
         }
 
         btnCerrarSesion.setOnClickListener {
-            val intent = Intent(this, Login::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
@@ -99,10 +100,11 @@ class AltaSocioActivity : AppCompatActivity() {
             val user = validateUserFields()
 
             if (socio != null && user != null) {
-                socioTable.createSocio(socio)
-                userTable.createUser(user)
-                clearFields()
-                Toast.makeText(this, "Alta exitosa", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, CobroActivity::class.java)
+                intent.putExtra("USER", user)
+                intent.putExtra("SOCIO", socio)
+                startActivity(intent)
+                Toast.makeText(this, "Solicitamos el cobro por inscripción", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this, "Por favor, complete todos los campos obligatorios", Toast.LENGTH_SHORT).show()
             }
@@ -110,105 +112,77 @@ class AltaSocioActivity : AppCompatActivity() {
     }
 
     private fun validateSocioFields(): Socio? {
-        val camposTextoValidos = validateTextFields()
+        val camposTexto = listOf(etNombre, etApellido, etFechaNacimiento, etDomicilio, etTelefono, etEmail)
+        val camposValidos = validateFields(camposTexto)
         val dniInt = validateDni()
         val aptoFisicoValido = validateAptoFisico()
 
-        if (camposTextoValidos && dniInt != null && aptoFisicoValido) {
-            val fechaLocalDate = parseFecha()
-
-            return Socio(
+        return if (camposValidos && dniInt != null && aptoFisicoValido) {
+            Socio(
                 nombre = etNombre.text.toString(),
                 apellido = etApellido.text.toString(),
                 dni = dniInt,
-                fechaNacimiento = fechaLocalDate,
+                fechaNacimiento = LocalDate.parse(etFechaNacimiento.text.toString(), DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                 domicilio = etDomicilio.text.toString(),
                 telefono = etTelefono.text.toString(),
                 email = etEmail.text.toString(),
                 aptoFisico = cbAptoFisico.isChecked
             )
-        }
-
-        return null
+        } else null
     }
 
     private fun validateUserFields(): User? {
         val camposUsuario = listOf(etUsername, etPassword)
-
-        val isValid = camposUsuario.all { campo ->
-            val textInputLayout = campo.parent.parent as? TextInputLayout
-            val esCampoValido = !campo.text.isNullOrBlank()
-
-            textInputLayout?.error = if (esCampoValido) null else "Este campo es obligatorio"
-
-            esCampoValido
-        }
-
-        val userExists = userTable.existsUser(etUsername.text.toString())
+        val camposValidos = validateFields(camposUsuario)
+        val username = etUsername.text.toString()
+        val userExists = username.isNotBlank() && !userDao.existsUser(username)
 
         if (userExists) {
-            val textInputLayout = etUsername.parent.parent as? TextInputLayout
-            textInputLayout?.error = "El nombre de usuario ya existe"
+            (etUsername.parent.parent as? TextInputLayout)?.error = "El nombre de usuario ya existe"
         }
 
-        return if (isValid && !userExists) {
-            User(
-                username = etUsername.text.toString(),
-                password = etPassword.text.toString(),
-                role = UserRole.SOCIO
-            )
-        } else {
-            null
-        }
-    }
-
-    private fun validateTextFields(): Boolean {
-        val camposDeTexto = listOf(
-            etNombre, etApellido, etDni, etFechaNacimiento,
-            etDomicilio, etTelefono, etEmail
-        )
-
-        return camposDeTexto.all { campo ->
-            val textInputLayout = campo.parent.parent as? TextInputLayout
-            val esCampoValido = !campo.text.isNullOrBlank()
-
-            if (esCampoValido) {
-                textInputLayout?.error = null
-            } else {
-                textInputLayout?.error = "Este campo es obligatorio"
-            }
-
-            esCampoValido
-        }
+        return if (camposValidos && !userExists) {
+            User(username = username, password = etPassword.text.toString(), role = UserRole.SOCIO)
+        } else null
     }
 
     private fun validateDni(): Int? {
-        val dniInt = etDni.text.toString().toIntOrNull()
         val textInputLayout = etDni.parent.parent as? TextInputLayout
-        val socioTable = SocioDAO(this)
+        val dniText = etDni.text.toString()
 
-        return if (dniInt == null || etDni.text.isNullOrBlank() || socioTable.existsSocio(dniInt)) {
-            textInputLayout?.error = "El DNI debe ser un número válido"
-            null
-        } else {
-            textInputLayout?.error = null
-            dniInt
+        if (dniText.isBlank()) {
+            textInputLayout?.error = "Este campo es obligatorio"
+            return null
         }
+
+        val dniInt = dniText.toIntOrNull()
+        if (dniInt == null) {
+            textInputLayout?.error = "El DNI debe ser un número válido"
+            return null
+        }
+
+        if (!socioDao.existsSocio(dniInt)) {
+            textInputLayout?.error = "El DNI ya está registrado"
+            return null
+        }
+
+        textInputLayout?.error = null
+        return dniInt
     }
 
     private fun validateAptoFisico(): Boolean {
-        return if (cbAptoFisico.isChecked) {
-            cbAptoFisico.error = null
-            true
-        } else {
-            cbAptoFisico.error = "Debe confirmar el apto físico"
-            false
-        }
+        val isValid = cbAptoFisico.isChecked
+        cbAptoFisico.error = if (isValid) null else "Debe confirmar el apto físico"
+        return isValid
     }
 
-    private fun parseFecha(): LocalDate {
-        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-        return LocalDate.parse(etFechaNacimiento.text.toString(), formatter)
+    private fun validateFields(campos: List<TextInputEditText>): Boolean {
+        return campos.map { campo ->
+            val textInputLayout = campo.parent.parent as? TextInputLayout
+            val esCampoValido = !campo.text.isNullOrBlank()
+            textInputLayout?.error = if (esCampoValido) null else "Este campo es obligatorio"
+            esCampoValido
+        }.all { it }
     }
 
     private fun clearFields() {

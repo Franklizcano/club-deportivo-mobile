@@ -7,13 +7,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.aislados.clubdeportivo.database.UserDAO
+import com.aislados.clubdeportivo.database.AppDatabase
 import com.aislados.clubdeportivo.model.User
 import com.aislados.clubdeportivo.model.UserRole
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 
-class Login : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -25,18 +25,21 @@ class Login : AppCompatActivity() {
         }
 
         val username = findViewById<TextInputEditText>(R.id.username)
+        val password = findViewById<TextInputEditText>(R.id.password)
         username.requestFocus()
 
-        val userTable = UserDAO(this)
+        val database = AppDatabase.getDatabase(context = this)
+        val userDao = database.userDao()
 
         val button = findViewById<Button>(R.id.button)
         button.setOnClickListener {
-            val password = findViewById<TextInputEditText>(R.id.password)
+            val usernameValue = username.text.toString()
+            val passwordValue = password.text.toString()
+            val user = userDao.findUser(usernameValue, passwordValue)
 
-            if (userTable.existsUser(username.text.toString(), password.text.toString())) {
+            if (user != null) {
                 Snackbar.make(findViewById(R.id.main), "¡Bienvenido!", Snackbar.LENGTH_SHORT).show()
-                Intent(this, MenuPrincipal::class.java)
-                    .also { startActivity(it) }
+                login(user)
                 finish()
             } else {
                 Snackbar.make(findViewById(R.id.main), "Usuario o contraseña incorrectos", Snackbar.LENGTH_LONG)
@@ -47,6 +50,13 @@ class Login : AppCompatActivity() {
                     }
                     .show()
             }
+        }
+    }
+    private fun login(user: User) {
+        if(user.role == UserRole.ADMIN) {
+            Intent(this, MenuPrincipal::class.java).also { startActivity(it) }
+        } else {
+            Intent(this, CarnetActivity::class.java).also { startActivity(it) }
         }
     }
 }

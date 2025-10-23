@@ -9,8 +9,12 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.aislados.clubdeportivo.database.AppDatabase
 import com.aislados.clubdeportivo.database.CuotaDAO
 import com.aislados.clubdeportivo.database.SocioDAO
+import com.aislados.clubdeportivo.extensions.parcelable
+import com.aislados.clubdeportivo.model.Socio
+import com.aislados.clubdeportivo.model.User
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.textfield.TextInputEditText
@@ -66,6 +70,21 @@ class CobroActivity : AppCompatActivity() {
         tvTitle.text = getString(R.string.cobro_cuota_socio_title)
         toggleGroup.check(R.id.btn_toggle_socio)
 
+        val database = AppDatabase.getDatabase(this)
+        val socioDao: SocioDAO = database.socioDao()
+        val cuotaDao: CuotaDAO = database.cuotaDao()
+
+        val socio = intent.parcelable<Socio>("SOCIO")
+        val user = intent.parcelable<User>("USER")
+
+        socio?.let {
+            etDniCobro.setText(socio.dni.toString())
+            etNombreCobro.setText(socio.nombre)
+            etApellidoCobro.setText(socio.apellido)
+            etDniCobro.isEnabled = false
+            toggleGroup.isEnabled = false
+        }
+
         // --- LÓGICA DEL TOGGLE (EL INTERRUPTOR) ---
         toggleGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
             if (!isChecked) return@addOnButtonCheckedListener
@@ -96,14 +115,12 @@ class CobroActivity : AppCompatActivity() {
             if (etDniCobro.text.toString().isEmpty()) {
                 Toast.makeText(this, "Por favor, ingrese un DNI", Toast.LENGTH_SHORT).show()
             } else {
-                val socioTable = SocioDAO(this)
-                val cuotaTable = CuotaDAO(this)
-                val socio = socioTable.findSocioByDni(etDniCobro.text.toString().toInt())
+                val socio = socioDao.findSocioByDni(etDniCobro.text.toString().toInt())
                 socio.let {
                     etNombreCobro.setText(socio?.nombre)
                     etApellidoCobro.setText(socio?.apellido)
                 }
-                val ultimaCuotaPaga = socio?.id?.let { cuotaTable.findCuotaBySocioId(socio.id) }
+                val ultimaCuotaPaga = socio?.id?.let { cuotaDao.findCuotaBySocioId(socio.id) }
                 ultimaCuotaPaga?.let {
                     etUltimaCuota.setText(it.fechaPago.toString())
                     etFechaVencimiento.setText(it.fechaVencimiento.toString())
@@ -139,7 +156,7 @@ class CobroActivity : AppCompatActivity() {
         }
 
         btnCerrarSesion.setOnClickListener {
-            val intent = Intent(this, Login::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }

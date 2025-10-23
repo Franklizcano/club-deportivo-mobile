@@ -1,6 +1,10 @@
 package com.aislados.clubdeportivo.model
 
-enum class UserRole {
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+enum class UserRole: Parcelable {
     ADMIN,
     SOCIO
 }

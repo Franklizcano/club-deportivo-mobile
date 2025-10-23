@@ -1,9 +1,16 @@
 package com.aislados.clubdeportivo.model
 
+import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 
+@Parcelize
+@Entity(tableName = "socios")
 data class Socio(
-    val id: Int?,
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
     val nombre: String,
     val apellido: String,
     val dni: Int,
@@ -12,4 +19,4 @@ data class Socio(
     val telefono: String,
     val email: String,
     val aptoFisico: Boolean
-)
+): Parcelable

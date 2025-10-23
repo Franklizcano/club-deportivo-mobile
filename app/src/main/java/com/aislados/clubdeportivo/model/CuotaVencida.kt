@@ -1,4 +1,4 @@
-package com.aislados.clubdeportivo
+package com.aislados.clubdeportivo.model
 
 data class CuotaVencida(
     val nombre: String,

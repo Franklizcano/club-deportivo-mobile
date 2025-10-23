@@ -1,55 +1,29 @@
 package com.aislados.clubdeportivo.database
 
-import android.content.Context
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.aislados.clubdeportivo.model.Cuota
 
-class CuotaDAO(private val context: Context) {
-    fun getWritableDatabase() = DatabaseHelper(context).writableDatabase
+@Dao
+interface CuotaDAO {
 
-    fun getReadableDatabase() = DatabaseHelper(context).readableDatabase
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(cuota: Cuota): Long
 
-    fun createCuota(cuota: Cuota) {
-        try {
-            getWritableDatabase().use { db ->
-                val contentValues = android.content.ContentValues().apply {
-                    put(CuotaTableHelper.COLUMN_SOCIO_ID, cuota.socioId)
-                    put(CuotaTableHelper.COLUMN_FECHA_PAGO, cuota.fechaPago.toString())
-                    put(CuotaTableHelper.COLUMN_FECHA_VENCIMIENTO, cuota.fechaVencimiento.toString())
-                    put(CuotaTableHelper.COLUMN_MONTO, cuota.monto)
-                    put(CuotaTableHelper.COLUMN_ACTIVIDAD, cuota.actividad)
-                }
-                db.insert(CuotaTableHelper.TABLE_NAME, null, contentValues)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
+    @Query("SELECT * FROM cuotas WHERE socioId = :socioId ORDER BY id DESC LIMIT 1")
+    fun findCuotaBySocioId(socioId: Long): Cuota?
 
-    fun findCuotaBySocioId(socioId: Int): Cuota? {
-        return try {
-            getReadableDatabase().use { db ->
-                db.query(
-                    CuotaTableHelper.TABLE_NAME,
-                    null,
-                    "${CuotaTableHelper.COLUMN_SOCIO_ID} = ?",
-                    arrayOf(socioId.toString()),
-                    null, null, "${CuotaTableHelper.COLUMN_ID} DESC"
-                ).use { cursor ->
-                    if (cursor.moveToFirst()) {
-                        Cuota(
-                            id = cursor.getInt(cursor.getColumnIndexOrThrow(CuotaTableHelper.COLUMN_ID)),
-                            socioId = socioId,
-                            fechaPago = java.time.LocalDate.parse(cursor.getString(cursor.getColumnIndexOrThrow(CuotaTableHelper.COLUMN_FECHA_PAGO))),
-                            fechaVencimiento = java.time.LocalDate.parse(cursor.getString(cursor.getColumnIndexOrThrow(CuotaTableHelper.COLUMN_FECHA_VENCIMIENTO))),
-                            monto = cursor.getDouble(cursor.getColumnIndexOrThrow(CuotaTableHelper.COLUMN_MONTO)),
-                            actividad = cursor.getString(cursor.getColumnIndexOrThrow(CuotaTableHelper.COLUMN_ACTIVIDAD))
-                        )
-                    } else null
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
+    @Query("SELECT * FROM cuotas WHERE socioId = :socioId ORDER BY id DESC")
+    fun findAllCuotasBySocioId(socioId: Long): List<Cuota>
+
+    @Query("SELECT * FROM cuotas")
+    fun getAllCuotas(): List<Cuota>
+
+    @Query("DELETE FROM cuotas WHERE id = :id")
+    fun deleteCuotaById(id: Long): Int
+
+    @Query("DELETE FROM cuotas WHERE socioId = :socioId")
+    fun deleteCuotasBySocioId(socioId: Long): Int
 }
