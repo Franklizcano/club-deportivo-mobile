@@ -12,13 +12,16 @@ import androidx.appcompat.app.AppCompatActivity
 import com.aislados.clubdeportivo.database.AppDatabase
 import com.aislados.clubdeportivo.database.CuotaDAO
 import com.aislados.clubdeportivo.database.SocioDAO
+import com.aislados.clubdeportivo.database.UserDAO
 import com.aislados.clubdeportivo.extensions.parcelable
+import com.aislados.clubdeportivo.model.Cuota
 import com.aislados.clubdeportivo.model.Socio
 import com.aislados.clubdeportivo.model.User
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import java.time.LocalDate
 
 class CobroActivity : AppCompatActivity() {
 
@@ -40,6 +43,10 @@ class CobroActivity : AppCompatActivity() {
 
     // Campos de No Socio
     private lateinit var etActividadCobro: TextInputEditText
+
+    private lateinit var tilDniCobro: TextInputLayout
+
+    private var primerPago: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +73,8 @@ class CobroActivity : AppCompatActivity() {
         // Inicializar campos de No Socio
         etActividadCobro = findViewById(R.id.et_actividad_cobro)
 
+        tilDniCobro = findViewById(R.id.til_dni_cobro)
+
         // Iniciar con la opción "Socio" seleccionada
         tvTitle.text = getString(R.string.cobro_cuota_socio_title)
         toggleGroup.check(R.id.btn_toggle_socio)
@@ -73,6 +82,7 @@ class CobroActivity : AppCompatActivity() {
         val database = AppDatabase.getDatabase(this)
         val socioDao: SocioDAO = database.socioDao()
         val cuotaDao: CuotaDAO = database.cuotaDao()
+        val userDao: UserDAO = database.userDao()
 
         val socio = intent.parcelable<Socio>("SOCIO")
         val user = intent.parcelable<User>("USER")
@@ -83,6 +93,8 @@ class CobroActivity : AppCompatActivity() {
             etApellidoCobro.setText(socio.apellido)
             etDniCobro.isEnabled = false
             toggleGroup.isEnabled = false
+            primerPago = true
+            tilDniCobro.isEnabled = false
         }
 
         // --- LÓGICA DEL TOGGLE (EL INTERRUPTOR) ---
@@ -110,7 +122,7 @@ class CobroActivity : AppCompatActivity() {
         actvMetodoPago.setAdapter(adapterMetodos)
 
         // --- LÓGICA DE BÚSQUEDA ---
-        findViewById<TextInputLayout>(R.id.til_dni_cobro).setEndIconOnClickListener {
+        tilDniCobro.setEndIconOnClickListener {
             Toast.makeText(this, "Buscando DNI...", Toast.LENGTH_SHORT).show()
             if (etDniCobro.text.toString().isEmpty()) {
                 Toast.makeText(this, "Por favor, ingrese un DNI", Toast.LENGTH_SHORT).show()
@@ -119,6 +131,7 @@ class CobroActivity : AppCompatActivity() {
                 socio.let {
                     etNombreCobro.setText(socio?.nombre)
                     etApellidoCobro.setText(socio?.apellido)
+                    etDniCobro.isEnabled = false
                 }
                 val ultimaCuotaPaga = socio?.id?.let { cuotaDao.findCuotaBySocioId(socio.id) }
                 ultimaCuotaPaga?.let {
@@ -131,6 +144,16 @@ class CobroActivity : AppCompatActivity() {
         // --- LÓGICA DEL BOTÓN REGISTRAR PAGO ---
         findViewById<MaterialButton>(R.id.btn_registrar_pago).setOnClickListener {
             if (validateFields()) {
+                if (primerPago) {
+                    val idSocio = socioDao.createSocio(socio!!)
+                    userDao.createUser(user!!.copy(socioId = idSocio))
+                    cuotaDao.createCuota(buildCuotaSocio(idSocio))
+                    val intent = Intent(this, MenuPrincipal::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    startActivity(intent)
+                    finish()
+                    //TODO: Revisar y seguir con el flujo de alta no socio.
+                }
                 Toast.makeText(this, "Pago registrado exitosamente", Toast.LENGTH_SHORT).show()
                 clearFields()
             } else {
@@ -140,6 +163,20 @@ class CobroActivity : AppCompatActivity() {
 
         // --- LÓGICA DEL FOOTER (reutilizada) ---
         setupFooter()
+    }
+
+    private fun buildCuotaSocio(idSocio: Long?): Cuota {
+        val fechaPago = LocalDate.now()
+        val fechaVencimiento = fechaPago.plusMonths(1)
+
+        return Cuota(
+            socioId = idSocio!!,
+            fechaPago = fechaPago,
+            fechaVencimiento = fechaVencimiento,
+            monto = etMonto.text.toString().toDouble(),
+            metodoPago = actvMetodoPago.text.toString(),
+            actividad = if (toggleGroup.checkedButtonId == R.id.btn_toggle_socio) null else etActividadCobro.text.toString()
+        )
     }
 
     private fun setupFooter() {
@@ -192,7 +229,6 @@ class CobroActivity : AppCompatActivity() {
         val dniValido = dniInt != null && !etDniCobro.text.isNullOrBlank()
         tilDni?.error = if (dniValido) null else "El DNI debe ser un número válido"
 
-        // Validar método de pago
         val tilMetodoPago = actvMetodoPago.parent.parent as? TextInputLayout
         val metodoPagoValido = !actvMetodoPago.text.isNullOrBlank()
         tilMetodoPago?.error = if (metodoPagoValido) null else "Seleccione un método de pago"
@@ -207,6 +243,10 @@ class CobroActivity : AppCompatActivity() {
     }
 
     private fun validateSocioFields(): Boolean {
+        if (primerPago) {
+            return true
+        }
+
         val camposSocio = listOf(etUltimaCuota, etFechaVencimiento)
 
         return camposSocio.all { campo ->

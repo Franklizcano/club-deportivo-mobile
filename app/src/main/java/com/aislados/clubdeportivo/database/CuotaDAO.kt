@@ -10,7 +10,7 @@ import com.aislados.clubdeportivo.model.Cuota
 interface CuotaDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(cuota: Cuota): Long
+    fun createCuota(cuota: Cuota): Long
 
     @Query("SELECT * FROM cuotas WHERE socioId = :socioId ORDER BY id DESC LIMIT 1")
     fun findCuotaBySocioId(socioId: Long): Cuota?

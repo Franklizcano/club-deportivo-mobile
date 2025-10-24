@@ -9,7 +9,7 @@ import com.aislados.clubdeportivo.model.Cuota
 import com.aislados.clubdeportivo.model.Socio
 import com.aislados.clubdeportivo.model.User
 
-@Database(entities = [User::class, Socio::class, Cuota::class], version = 1, exportSchema = false)
+@Database(entities = [User::class, Socio::class, Cuota::class], version = 2, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 

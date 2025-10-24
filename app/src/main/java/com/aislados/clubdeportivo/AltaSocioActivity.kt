@@ -135,7 +135,7 @@ class AltaSocioActivity : AppCompatActivity() {
         val camposUsuario = listOf(etUsername, etPassword)
         val camposValidos = validateFields(camposUsuario)
         val username = etUsername.text.toString()
-        val userExists = username.isNotBlank() && !userDao.existsUser(username)
+        val userExists = username.isNotBlank() && userDao.existsUser(username)
 
         if (userExists) {
             (etUsername.parent.parent as? TextInputLayout)?.error = "El nombre de usuario ya existe"
@@ -161,7 +161,7 @@ class AltaSocioActivity : AppCompatActivity() {
             return null
         }
 
-        if (!socioDao.existsSocio(dniInt)) {
+        if (socioDao.existsSocio(dniInt)) {
             textInputLayout?.error = "El DNI ya está registrado"
             return null
         }

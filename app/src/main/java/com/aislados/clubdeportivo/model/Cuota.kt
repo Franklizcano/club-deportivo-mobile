@@ -2,6 +2,7 @@ package com.aislados.clubdeportivo.model
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.time.LocalDate
 
@@ -12,7 +13,8 @@ import java.time.LocalDate
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("socioId"),
         onDelete = ForeignKey.CASCADE
-    )]
+    )],
+    indices = [Index(value = ["socioId"])]
 )
 data class Cuota(
     @PrimaryKey(autoGenerate = true)
@@ -20,6 +22,7 @@ data class Cuota(
     val socioId: Long,
     val fechaPago: LocalDate,
     val fechaVencimiento: LocalDate,
+    val metodoPago: String,
     val monto: Double,
     val actividad: String?
 )
