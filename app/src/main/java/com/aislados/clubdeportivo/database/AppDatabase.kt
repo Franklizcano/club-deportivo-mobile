@@ -6,16 +6,18 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.aislados.clubdeportivo.model.Cuota
+import com.aislados.clubdeportivo.model.NoSocio
 import com.aislados.clubdeportivo.model.Socio
 import com.aislados.clubdeportivo.model.User
 
-@Database(entities = [User::class, Socio::class, Cuota::class], version = 2, exportSchema = false)
+@Database(entities = [User::class, Socio::class, Cuota::class, NoSocio::class], version = 3, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDAO
     abstract fun socioDao(): SocioDAO
     abstract fun cuotaDao(): CuotaDAO
+    abstract fun noSocioDao(): NoSocioDAO
 
     companion object {
         @Volatile

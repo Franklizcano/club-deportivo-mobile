@@ -30,7 +30,6 @@ class LoginActivity : AppCompatActivity() {
 
         val database = AppDatabase.getDatabase(context = this)
         val userDao = database.userDao()
-        userDao.createUser(User(username = "admin", password = "admin", role = UserRole.ADMIN))
 
         val button = findViewById<Button>(R.id.button)
         button.setOnClickListener {

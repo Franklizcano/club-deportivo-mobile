@@ -15,6 +15,7 @@ import com.aislados.clubdeportivo.database.SocioDAO
 import com.aislados.clubdeportivo.database.UserDAO
 import com.aislados.clubdeportivo.extensions.parcelable
 import com.aislados.clubdeportivo.model.Cuota
+import com.aislados.clubdeportivo.model.NoSocio
 import com.aislados.clubdeportivo.model.Socio
 import com.aislados.clubdeportivo.model.User
 import com.google.android.material.button.MaterialButton
@@ -86,8 +87,10 @@ class CobroActivity : AppCompatActivity() {
 
         val socio = intent.parcelable<Socio>("SOCIO")
         val user = intent.parcelable<User>("USER")
+        val noSocio = intent.parcelable<NoSocio>("NO_SOCIOS")
 
         socio?.let {
+            toggleGroup.check(R.id.btn_toggle_socio)
             etDniCobro.setText(socio.dni.toString())
             etNombreCobro.setText(socio.nombre)
             etApellidoCobro.setText(socio.apellido)
@@ -95,6 +98,20 @@ class CobroActivity : AppCompatActivity() {
             toggleGroup.isEnabled = false
             primerPago = true
             tilDniCobro.isEnabled = false
+        }
+
+        noSocio?.let {
+            toggleGroup.check(R.id.btn_toggle_no_socio)
+            tvTitle.text = getString(R.string.cobro_actividad_no_socio_title)
+            socioFieldsContainer.visibility = View.GONE
+            noSocioFieldsContainer.visibility = View.VISIBLE
+            etDniCobro.setText(noSocio.dni.toString())
+            etNombreCobro.setText(noSocio.nombre)
+            etApellidoCobro.setText(noSocio.apellido)
+            etDniCobro.isEnabled = false
+            toggleGroup.isEnabled = false
+            tilDniCobro.isEnabled = false
+            primerPago = true
         }
 
         // --- LÓGICA DEL TOGGLE (EL INTERRUPTOR) ---
@@ -133,7 +150,7 @@ class CobroActivity : AppCompatActivity() {
                     etApellidoCobro.setText(socio?.apellido)
                     etDniCobro.isEnabled = false
                 }
-                val ultimaCuotaPaga = socio?.id?.let { cuotaDao.findCuotaBySocioId(socio.id) }
+                val ultimaCuotaPaga = socio?.id?.let { cuotaDao.findCuotaBySocioIdOrderByIdDesc(socio.id) }
                 ultimaCuotaPaga?.let {
                     etUltimaCuota.setText(it.fechaPago.toString())
                     etFechaVencimiento.setText(it.fechaVencimiento.toString())
@@ -144,16 +161,26 @@ class CobroActivity : AppCompatActivity() {
         // --- LÓGICA DEL BOTÓN REGISTRAR PAGO ---
         findViewById<MaterialButton>(R.id.btn_registrar_pago).setOnClickListener {
             if (validateFields()) {
-                if (primerPago) {
-                    val idSocio = socioDao.createSocio(socio!!)
-                    userDao.createUser(user!!.copy(socioId = idSocio))
-                    cuotaDao.createCuota(buildCuotaSocio(idSocio))
-                    val intent = Intent(this, MenuPrincipal::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    startActivity(intent)
-                    finish()
-                    //TODO: Revisar y seguir con el flujo de alta no socio.
+                if (toggleGroup.checkedButtonId == R.id.btn_toggle_socio) {
+                    if (primerPago) {
+                        val idSocio = socioDao.createSocio(socio!!)
+                        userDao.createUser(user!!.copy(socioId = idSocio))
+                        cuotaDao.createCuota(buildCuotaSocio(idSocio, LocalDate.now()))
+                        val intent = Intent(this, MenuPrincipal::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        val idSocio = socioDao.findSocioByDni(etDniCobro.text.toString().toInt())!!.id
+                        val ultimaCuotaPaga = cuotaDao.findCuotaBySocioIdOrderByIdDesc(idSocio)
+                        cuotaDao.createCuota(buildCuotaSocio(idSocio, ultimaCuotaPaga!!.fechaVencimiento))
+                    }
+                } else {
+                    if (primerPago) {
+
+                    }
                 }
+
                 Toast.makeText(this, "Pago registrado exitosamente", Toast.LENGTH_SHORT).show()
                 clearFields()
             } else {
@@ -165,13 +192,12 @@ class CobroActivity : AppCompatActivity() {
         setupFooter()
     }
 
-    private fun buildCuotaSocio(idSocio: Long?): Cuota {
-        val fechaPago = LocalDate.now()
-        val fechaVencimiento = fechaPago.plusMonths(1)
+    private fun buildCuotaSocio(idSocio: Long?, lastExpirationDate: LocalDate): Cuota {
+        val fechaVencimiento = lastExpirationDate.plusMonths(1)
 
         return Cuota(
             socioId = idSocio!!,
-            fechaPago = fechaPago,
+            fechaPago = LocalDate.now(),
             fechaVencimiento = fechaVencimiento,
             monto = etMonto.text.toString().toDouble(),
             metodoPago = actvMetodoPago.text.toString(),
@@ -270,6 +296,7 @@ class CobroActivity : AppCompatActivity() {
 
     private fun clearFields() {
         etDniCobro.text?.clear()
+        etDniCobro.isEnabled = true
         etNombreCobro.text?.clear()
         etApellidoCobro.text?.clear()
         etMonto.text?.clear()

@@ -58,6 +58,8 @@ class AltaSocioActivity : AppCompatActivity() {
         etFechaNacimiento.isFocusable = false
         etFechaNacimiento.isClickable = true
 
+        setupFooter()
+
         etFechaNacimiento.setOnClickListener {
             val datePicker = MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Seleccionar fecha")
@@ -75,26 +77,6 @@ class AltaSocioActivity : AppCompatActivity() {
             datePicker.show(supportFragmentManager, "DATE_PICKER")
         }
 
-        val btnAtras = findViewById<LinearLayout>(R.id.btn_atras)
-        val btnMenuPrincipal = findViewById<LinearLayout>(R.id.btn_menu_principal)
-        val btnCerrarSesion = findViewById<LinearLayout>(R.id.btn_cerrar_sesion)
-
-        btnAtras.setOnClickListener {
-            finish()
-        }
-
-        btnMenuPrincipal.setOnClickListener {
-            val intent = Intent(this, MenuPrincipal::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent)
-        }
-
-        btnCerrarSesion.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-        }
-
         btnRegistrarAlta.setOnClickListener {
             val socio = validateSocioFields()
             val user = validateUserFields()
@@ -103,8 +85,8 @@ class AltaSocioActivity : AppCompatActivity() {
                 val intent = Intent(this, CobroActivity::class.java)
                 intent.putExtra("USER", user)
                 intent.putExtra("SOCIO", socio)
-                startActivity(intent)
                 Toast.makeText(this, "Solicitamos el cobro por inscripción", Toast.LENGTH_SHORT).show()
+                startActivity(intent)
             } else {
                 Toast.makeText(this, "Por favor, complete todos los campos obligatorios", Toast.LENGTH_SHORT).show()
             }
@@ -183,6 +165,28 @@ class AltaSocioActivity : AppCompatActivity() {
             textInputLayout?.error = if (esCampoValido) null else "Este campo es obligatorio"
             esCampoValido
         }.all { it }
+    }
+
+    private fun setupFooter() {
+        val btnAtras = findViewById<LinearLayout>(R.id.btn_atras)
+        val btnMenuPrincipal = findViewById<LinearLayout>(R.id.btn_menu_principal)
+        val btnCerrarSesion = findViewById<LinearLayout>(R.id.btn_cerrar_sesion)
+
+        btnAtras.setOnClickListener {
+            finish()
+        }
+
+        btnMenuPrincipal.setOnClickListener {
+            val intent = Intent(this, MenuPrincipal::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+        }
+
+        btnCerrarSesion.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        }
     }
 
     private fun clearFields() {

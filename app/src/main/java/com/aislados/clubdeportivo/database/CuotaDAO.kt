@@ -13,7 +13,10 @@ interface CuotaDAO {
     fun createCuota(cuota: Cuota): Long
 
     @Query("SELECT * FROM cuotas WHERE socioId = :socioId ORDER BY id DESC LIMIT 1")
-    fun findCuotaBySocioId(socioId: Long): Cuota?
+    fun findCuotaBySocioIdOrderByIdDesc(socioId: Long): Cuota?
+
+    @Query("SELECT * FROM cuotas")
+    fun getAllCuotasDebug(): List<Cuota>
 
     @Query("SELECT * FROM cuotas WHERE socioId = :socioId ORDER BY id DESC")
     fun findAllCuotasBySocioId(socioId: Long): List<Cuota>
