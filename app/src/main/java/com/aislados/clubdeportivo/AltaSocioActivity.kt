@@ -188,17 +188,4 @@ class AltaSocioActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
-    private fun clearFields() {
-        etNombre.text?.clear()
-        etApellido.text?.clear()
-        etDni.text?.clear()
-        etFechaNacimiento.text?.clear()
-        etDomicilio.text?.clear()
-        etTelefono.text?.clear()
-        etEmail.text?.clear()
-        etUsername.text?.clear()
-        etPassword.text?.clear()
-        cbAptoFisico.isChecked = false
-    }
 }

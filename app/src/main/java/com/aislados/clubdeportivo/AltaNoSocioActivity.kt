@@ -131,16 +131,6 @@ class AltaNoSocioActivity : AppCompatActivity() {
         }.all { it }
     }
 
-    private fun clearFields() {
-        etNombre.text?.clear()
-        etApellido.text?.clear()
-        etDni.text?.clear()
-        etFechaNacimiento.text?.clear()
-        etDomicilio.text?.clear()
-        etTelefono.text?.clear()
-        etEmail.text?.clear()
-    }
-
     private fun setupFooter() {
         val btnAtras = findViewById<LinearLayout>(R.id.btn_atras)
         val btnMenuPrincipal = findViewById<LinearLayout>(R.id.btn_menu_principal)

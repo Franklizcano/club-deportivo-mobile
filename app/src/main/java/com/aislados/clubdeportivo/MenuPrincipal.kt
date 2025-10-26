@@ -1,6 +1,5 @@
 package com.aislados.clubdeportivo
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.LinearLayout
@@ -27,27 +26,22 @@ class MenuPrincipal : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Botón Carnet
         val btnCarnet = findViewById<LinearLayout>(R.id.btn_carnet)
         btnCarnet.setOnClickListener {
             val intent = Intent(this, CarnetActivity::class.java)
             startActivity(intent)
         }
 
-        // Botón "Cobro"
         val btnCobro = findViewById<LinearLayout>(R.id.btn_pago)
         btnCobro.setOnClickListener {
             val intent = Intent(this, CobroActivity::class.java)
             startActivity(intent)
         }
 
-        // Botón "Cuotas"
         val btnCuotas = findViewById<LinearLayout>(R.id.btn_cuotas)
         btnCuotas.setOnClickListener {
             val intent = Intent(this, CuotasActivity::class.java)
             startActivity(intent)
         }
-
-
     }
 }

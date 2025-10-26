@@ -19,6 +19,9 @@ interface SocioDAO {
     @Query("SELECT * FROM socios")
     fun getAllSocios(): List<Socio>
 
+    @Query("SELECT * FROM socios WHERE id = :id")
+    fun findSocioById(id: Long): Socio?
+
     @Query("DELETE FROM socios WHERE dni = :dni")
     fun deleteSocioByDni(dni: Int): Int
 }
