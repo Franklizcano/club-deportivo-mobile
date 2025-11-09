@@ -2,51 +2,49 @@ package com.aislados.clubdeportivo
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.button.MaterialButton
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+// import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
+// import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+
 
 class CarnetActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_carnet)
 
-        // Encontrar los componentes del layout
-        val tilDni = findViewById<TextInputLayout>(R.id.til_dni_carnet)
-        val etDni = findViewById<TextInputEditText>(R.id.et_dni_carnet)
-        val etNombre = findViewById<TextInputEditText>(R.id.et_nombre_carnet)
-        val etApellido = findViewById<TextInputEditText>(R.id.et_apellido_carnet)
-        val etEstado = findViewById<TextInputEditText>(R.id.et_estado_carnet)
-        val btnEmitirCarnet = findViewById<MaterialButton>(R.id.btn_emitir_carnet)
-
-        // --- LÓGICA DE BÚSQUEDA ---
-        // Se ejecuta cuando el usuario toca el ícono de la lupa
-        tilDni.setEndIconOnClickListener {
-            val dni = etDni.text.toString()
-            if (dni.isNotEmpty()) {
-                Toast.makeText(this, "Buscando DNI: $dni...", Toast.LENGTH_SHORT).show()
-
-                // --- SIMULACIÓN DE BÚSQUEDA EN BASE DE DATOS ---
-                // En un caso real, aquí se llamarías a Socio tras buscar el DNI.
-                // Por ahora, solo rellenamos con datos de ejemplo.
-                etNombre.setText("Juan")
-                etApellido.setText("Perez")
-                etEstado.setText("Activo")
-                // ---------------------------------------------------
-
-            } else {
-                Toast.makeText(this, "Por favor, ingrese un DNI", Toast.LENGTH_SHORT).show()
-            }
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
         }
 
-        // --- LÓGICA DEL BOTÓN DE EMITIR CARNET ---
-        btnEmitirCarnet.setOnClickListener {
-            // Aquí irá la lógica para generar o marcar la entrega del carnet
-            Toast.makeText(this, "Emitiendo carnet...", Toast.LENGTH_SHORT).show()
-        }
+
+        val ivFotoSocio = findViewById<ImageView>(R.id.iv_foto_socio) // NUEVO
+        val etNroSocio = findViewById<TextInputEditText>(R.id.et_nro_socio) // NUEVO
+        val etDni = findViewById<TextInputEditText>(R.id.et_dni_carnet) // Existía
+        val etNombre = findViewById<TextInputEditText>(R.id.et_nombre_carnet) // Existía
+        val etApellido = findViewById<TextInputEditText>(R.id.et_apellido_carnet) // Existía
+        val etEstado = findViewById<TextInputEditText>(R.id.et_estado_carnet) // Existía
+
+        // Vistas ELIMINADAS (ya no se buscan)
+        // val tilDni = findViewById<TextInputLayout>(R.id.til_dni_carnet) // BORRADO
+        // val btnEmitirCarnet = findViewById<MaterialButton>(R.id.btn_emitir_carnet) // BORRADO
+
+
+        // --- LÓGICA DE BÚSQUEDA (ELIMINADA) ---
+        // 5. Borramos la lógica que usaba los IDs eliminados
+        // tilDni.setEndIconOnClickListener { ... }
+        // btnEmitirCarnet.setOnClickListener { ... }
+
 
         // --- LÓGICA PARA LOS BOTONES DEL FOOTER ---
         val btnAtras = findViewById<LinearLayout>(R.id.btn_atras)
@@ -62,9 +60,28 @@ class CarnetActivity : AppCompatActivity() {
         }
 
         btnCerrarSesion.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+            mostrarDialogoDeCierreSesion()
         }
+    }
+    private fun mostrarDialogoDeCierreSesion() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.dialog_logout_title)
+            .setMessage(R.string.dialog_logout_message)
+
+            // Botón "Sí, Cerrar" (Positivo)
+            .setPositiveButton(R.string.dialog_logout_positive) { dialog, which ->
+                // --- ¡Aquí va tu código original de logout! ---
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                // ---------------------------------------------
+            }
+
+            // Botón "Cancelar" (Negativo)
+            .setNegativeButton(R.string.dialog_logout_negative) { dialog, which ->
+                // Simplemente cierra el diálogo y no hace nada
+                dialog.dismiss()
+            }
+            .show()
     }
 }

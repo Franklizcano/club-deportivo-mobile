@@ -8,7 +8,10 @@ import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.aislados.clubdeportivo.database.AppDatabase
 import com.aislados.clubdeportivo.database.CuotaDAO
 import com.aislados.clubdeportivo.database.SocioDAO
@@ -20,6 +23,7 @@ import com.aislados.clubdeportivo.model.Socio
 import com.aislados.clubdeportivo.model.User
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.time.LocalDate
@@ -51,7 +55,15 @@ class CobroActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+
         setContentView(R.layout.activity_cobro)
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         // Encontrar todos los componentes del layout
         tvTitle = findViewById(R.id.tv_cobro_title)
@@ -219,9 +231,7 @@ class CobroActivity : AppCompatActivity() {
         }
 
         btnCerrarSesion.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+            mostrarDialogoDeCierreSesion()
         }
     }
 
@@ -314,5 +324,19 @@ class CobroActivity : AppCompatActivity() {
         (etUltimaCuota.parent.parent as? TextInputLayout)?.error = null
         (etFechaVencimiento.parent.parent as? TextInputLayout)?.error = null
         (etActividadCobro.parent.parent as? TextInputLayout)?.error = null
+    }
+    private fun mostrarDialogoDeCierreSesion() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.dialog_logout_title)
+            .setMessage(R.string.dialog_logout_message)
+            .setPositiveButton(R.string.dialog_logout_positive) { dialog, which ->
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+            }
+            .setNegativeButton(R.string.dialog_logout_negative) { dialog, which ->
+                dialog.dismiss()
+            }
+            .show()
     }
 }

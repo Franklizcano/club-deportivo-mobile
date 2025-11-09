@@ -173,3 +173,5 @@ fabric.properties
 ### AndroidStudio Patch ###
 
 !/gradle/wrapper/gradle-wrapper.jar
+/.idea/AndroidProjectSystem.xml
+/.idea/runConfigurations.xml

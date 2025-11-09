@@ -4,14 +4,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge // --- ¡AÑADIDO! ---
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat // --- ¡AÑADIDO! ---
+import androidx.core.view.WindowInsetsCompat // --- ¡AÑADIDO! ---
 import com.aislados.clubdeportivo.database.AppDatabase
+import com.aislados.clubdeportivo.database.SocioDAO // --- ¡AÑADIDO! ---
+import com.aislados.clubdeportivo.database.UserDAO // --- ¡AÑADIDO! ---
 import com.aislados.clubdeportivo.model.Socio
 import com.aislados.clubdeportivo.model.User
 import com.aislados.clubdeportivo.model.UserRole
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.text.SimpleDateFormat
@@ -34,14 +40,26 @@ class AltaSocioActivity : AppCompatActivity() {
     private lateinit var etPassword: TextInputEditText
     private lateinit var btnRegistrarAlta: MaterialButton
     private lateinit var cbAptoFisico: MaterialCheckBox
-
-    val database = AppDatabase.getDatabase(this)
-    val userDao = database.userDao()
-    val socioDao = database.socioDao()
+    private lateinit var userDao: UserDAO
+    private lateinit var socioDao: SocioDAO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        enableEdgeToEdge()
+
         setContentView(R.layout.activity_alta_socio)
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+        val database = AppDatabase.getDatabase(this)
+        userDao = database.userDao()
+        socioDao = database.socioDao()
+
 
         etNombre = findViewById(R.id.et_nombre)
         etApellido = findViewById(R.id.et_apellido)
@@ -76,7 +94,6 @@ class AltaSocioActivity : AppCompatActivity() {
 
             datePicker.show(supportFragmentManager, "DATE_PICKER")
         }
-
         btnRegistrarAlta.setOnClickListener {
             val socio = validateSocioFields()
             val user = validateUserFields()
@@ -112,7 +129,6 @@ class AltaSocioActivity : AppCompatActivity() {
             )
         } else null
     }
-
     private fun validateUserFields(): User? {
         val camposUsuario = listOf(etUsername, etPassword)
         val camposValidos = validateFields(camposUsuario)
@@ -127,7 +143,6 @@ class AltaSocioActivity : AppCompatActivity() {
             User(username = username, password = etPassword.text.toString(), role = UserRole.SOCIO)
         } else null
     }
-
     private fun validateDni(): Int? {
         val textInputLayout = etDni.parent.parent as? TextInputLayout
         val dniText = etDni.text.toString()
@@ -151,13 +166,11 @@ class AltaSocioActivity : AppCompatActivity() {
         textInputLayout?.error = null
         return dniInt
     }
-
     private fun validateAptoFisico(): Boolean {
         val isValid = cbAptoFisico.isChecked
         cbAptoFisico.error = if (isValid) null else "Debe confirmar el apto físico"
         return isValid
     }
-
     private fun validateFields(campos: List<TextInputEditText>): Boolean {
         return campos.map { campo ->
             val textInputLayout = campo.parent.parent as? TextInputLayout
@@ -166,7 +179,6 @@ class AltaSocioActivity : AppCompatActivity() {
             esCampoValido
         }.all { it }
     }
-
     private fun setupFooter() {
         val btnAtras = findViewById<LinearLayout>(R.id.btn_atras)
         val btnMenuPrincipal = findViewById<LinearLayout>(R.id.btn_menu_principal)
@@ -183,12 +195,9 @@ class AltaSocioActivity : AppCompatActivity() {
         }
 
         btnCerrarSesion.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+            mostrarDialogoDeCierreSesion()
         }
     }
-
     private fun clearFields() {
         etNombre.text?.clear()
         etApellido.text?.clear()
@@ -200,5 +209,23 @@ class AltaSocioActivity : AppCompatActivity() {
         etUsername.text?.clear()
         etPassword.text?.clear()
         cbAptoFisico.isChecked = false
+    }
+    private fun mostrarDialogoDeCierreSesion() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.dialog_logout_title)
+            .setMessage(R.string.dialog_logout_message)
+
+            // Botón "Sí, Cerrar" (Positivo)
+            .setPositiveButton(R.string.dialog_logout_positive) { dialog, which ->
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+            }
+
+            // Botón "Cancelar" (Negativo)
+            .setNegativeButton(R.string.dialog_logout_negative) { dialog, which ->
+                dialog.dismiss()
+            }
+            .show()
     }
 }

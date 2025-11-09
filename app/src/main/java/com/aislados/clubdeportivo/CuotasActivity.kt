@@ -3,19 +3,28 @@ package com.aislados.clubdeportivo
 import android.content.Intent
 import android.os.Bundle
 import android.widget.LinearLayout
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.aislados.clubdeportivo.model.CuotaVencida
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class CuotasActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_cuotas)
+        enableEdgeToEdge()
 
-        // 1. Encontrar el RecyclerView en el layout
+        setContentView(R.layout.activity_cuotas)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
         val recyclerView = findViewById<RecyclerView>(R.id.rv_cuotas)
 
-        // 2. Crear la lista de datos de ejemplo (como pediste)
         val listaDeCuotas = listOf(
             CuotaVencida("Juan Giordano", "12/05/2025", "12/05/2025", "$ 22,000.00"),
             CuotaVencida("Daniel Ortega", "06/09/2025", "06/09/2025", "$ 25,000.00"),
@@ -27,11 +36,9 @@ class CuotasActivity : AppCompatActivity() {
             CuotaVencida("Valentina Gomez", "10/09/2025", "10/09/2025", "$ 22,000.00")
         )
 
-        // 3. Crear una instancia del Adaptador y pasársela al RecyclerView
         val adapter = CuotasAdapter(listaDeCuotas)
         recyclerView.adapter = adapter
 
-        // 4. Configurar la lógica del footer
         setupFooter()
     }
 
@@ -49,9 +56,23 @@ class CuotasActivity : AppCompatActivity() {
         }
 
         btnCerrarSesion.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+            mostrarDialogoDeCierreSesion()
         }
+    }
+    private fun mostrarDialogoDeCierreSesion() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.dialog_logout_title)
+            .setMessage(R.string.dialog_logout_message)
+
+            .setPositiveButton(R.string.dialog_logout_positive) { dialog, which ->
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+            }
+
+            .setNegativeButton(R.string.dialog_logout_negative) { dialog, which ->
+                dialog.dismiss()
+            }
+            .show()
     }
 }

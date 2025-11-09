@@ -51,7 +51,6 @@
                 android:textColor="@color/main_accent"
                 android:textSize="34sp"
                 android:textStyle="bold" />
-ad
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/iv_logo"
                 android:layout_width="150dp"
@@ -90,16 +89,16 @@ ad
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/btn_carnet"
+                        android:id="@+id/btn_pago"
                         style="@style/MainMenuOption"
                         android:layout_marginStart="8dp">
                         <ImageView
                             style="@style/MainMenuOption.Icon"
-                            android:src="@drawable/ic_card"
-                            android:contentDescription="@string/menu_carnet"/>
+                            android:src="@drawable/ic_download"
+                            android:contentDescription="@string/menu_pago"/>
                         <TextView
                             style="@style/MainMenuOption.Text"
-                            android:text="@string/menu_carnet"/>
+                            android:text="@string/menu_pago"/>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -109,23 +108,17 @@ ad
                     android:orientation="horizontal"
                     android:layout_marginTop="16dp">
 
-                    <LinearLayout
-                        android:id="@+id/btn_pago"
-                        style="@style/MainMenuOption"
-                        android:layout_marginEnd="8dp">
-                        <ImageView
-                            style="@style/MainMenuOption.Icon"
-                            android:src="@drawable/ic_download"
-                            android:contentDescription="@string/menu_pago"/>
-                        <TextView
-                            style="@style/MainMenuOption.Text"
-                            android:text="@string/menu_pago"/>
-                    </LinearLayout>
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.5"
+                        android:layout_marginStart="8dp"/>
 
                     <LinearLayout
                         android:id="@+id/btn_cuotas"
                         style="@style/MainMenuOption"
-                        android:layout_marginStart="8dp">
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp">
                         <ImageView
                             style="@style/MainMenuOption.Icon"
                             android:src="@drawable/ic_calendar"
@@ -134,8 +127,15 @@ ad
                             style="@style/MainMenuOption.Text"
                             android:text="@string/menu_cuotas"/>
                     </LinearLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.5"
+                        android:layout_marginEnd="8dp"/>
                 </LinearLayout>
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
