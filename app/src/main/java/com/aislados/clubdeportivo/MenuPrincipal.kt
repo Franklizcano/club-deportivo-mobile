@@ -30,19 +30,18 @@ class MenuPrincipal : AppCompatActivity() {
 
         // val btnCarnet = findViewById<LinearLayout>(R.id.btn_carnet)
 
-        // Botón "Cobro"
         val btnCobro = findViewById<LinearLayout>(R.id.btn_pago)
         btnCobro.setOnClickListener {
             val intent = Intent(this, CobroActivity::class.java)
             startActivity(intent)
         }
 
-        // Botón "Cuotas"
         val btnCuotas = findViewById<LinearLayout>(R.id.btn_cuotas)
         btnCuotas.setOnClickListener {
-            val intent = Intent(this, CuotasActivity::class.java)
+            val intent = Intent(this, CuotasVencidasActivity::class.java)
             startActivity(intent)
         }
+
     }
 
     private fun mostrarDialogoDeCierreSesion() {

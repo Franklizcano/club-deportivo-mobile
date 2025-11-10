@@ -198,6 +198,7 @@ class AltaSocioActivity : AppCompatActivity() {
             mostrarDialogoDeCierreSesion()
         }
     }
+
     private fun clearFields() {
         etNombre.text?.clear()
         etApellido.text?.clear()

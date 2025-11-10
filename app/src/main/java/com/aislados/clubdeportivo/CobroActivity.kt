@@ -14,6 +14,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.aislados.clubdeportivo.database.AppDatabase
 import com.aislados.clubdeportivo.database.CuotaDAO
+import com.aislados.clubdeportivo.database.NoSocioDAO
 import com.aislados.clubdeportivo.database.SocioDAO
 import com.aislados.clubdeportivo.database.UserDAO
 import com.aislados.clubdeportivo.extensions.parcelable
@@ -68,7 +69,6 @@ class CobroActivity : AppCompatActivity() {
         // Encontrar todos los componentes del layout
         tvTitle = findViewById(R.id.tv_cobro_title)
         toggleGroup = findViewById(R.id.toggle_button_group)
-        val btnToggleSocio = findViewById<MaterialButton>(R.id.btn_toggle_socio)
         socioFieldsContainer = findViewById(R.id.socio_fields_container)
         noSocioFieldsContainer = findViewById(R.id.no_socio_fields_container)
 
@@ -94,6 +94,7 @@ class CobroActivity : AppCompatActivity() {
 
         val database = AppDatabase.getDatabase(this)
         val socioDao: SocioDAO = database.socioDao()
+        val noSocioDao: NoSocioDAO = database.noSocioDao()
         val cuotaDao: CuotaDAO = database.cuotaDao()
         val userDao: UserDAO = database.userDao()
 
@@ -131,12 +132,10 @@ class CobroActivity : AppCompatActivity() {
             if (!isChecked) return@addOnButtonCheckedListener
 
             if (checkedId == R.id.btn_toggle_socio) {
-                // Mostrar campos de Socio, ocultar los de No Socio
                 tvTitle.text = getString(R.string.cobro_cuota_socio_title)
                 socioFieldsContainer.visibility = View.VISIBLE
                 noSocioFieldsContainer.visibility = View.GONE
             } else {
-                // Mostrar campos de No Socio, ocultar los de Socio
                 tvTitle.text = getString(R.string.cobro_actividad_no_socio_title)
                 socioFieldsContainer.visibility = View.GONE
                 noSocioFieldsContainer.visibility = View.VISIBLE
@@ -175,24 +174,31 @@ class CobroActivity : AppCompatActivity() {
             if (validateFields()) {
                 if (toggleGroup.checkedButtonId == R.id.btn_toggle_socio) {
                     if (primerPago) {
-                        val idSocio = socioDao.createSocio(socio!!)
-                        userDao.createUser(user!!.copy(socioId = idSocio))
-                        cuotaDao.createCuota(buildCuotaSocio(idSocio, LocalDate.now()))
+                        val socioId = socioDao.createSocio(socio!!)
+                        userDao.createUser(user!!.copy(socioId = socioId))
+                        cuotaDao.createCuota(buildCuota(socioId, lastExpirationDate = LocalDate.now()))
                         val intent = Intent(this, MenuPrincipal::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(intent)
                         finish()
                     } else {
-                        val idSocio = socioDao.findSocioByDni(etDniCobro.text.toString().toInt())!!.id
-                        val ultimaCuotaPaga = cuotaDao.findCuotaBySocioIdOrderByIdDesc(idSocio)
-                        cuotaDao.createCuota(buildCuotaSocio(idSocio, ultimaCuotaPaga!!.fechaVencimiento))
+                        val socioId = socioDao.findSocioByDni(etDniCobro.text.toString().toInt())!!.id
+                        val ultimaCuotaPaga = cuotaDao.findCuotaBySocioIdOrderByIdDesc(socioId)
+                        cuotaDao.createCuota(buildCuota(socioId = socioId, lastExpirationDate = ultimaCuotaPaga!!.fechaVencimiento))
                     }
                 } else {
                     if (primerPago) {
-
+                        val noSocioId = noSocioDao.createNoSocio(noSocio!!)
+                        cuotaDao.createCuota(buildCuota(noSocioId = noSocioId, lastExpirationDate = null))
+                        val intent = Intent(this, MenuPrincipal::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        val noSocioId = noSocioDao.findNoSocioByDni(etDniCobro.text.toString().toInt())!!.id
+                        cuotaDao.createCuota(buildCuota(noSocioId = noSocioId, lastExpirationDate = null))
                     }
                 }
-
                 Toast.makeText(this, "Pago registrado exitosamente", Toast.LENGTH_SHORT).show()
                 clearFields()
             } else {
@@ -200,21 +206,22 @@ class CobroActivity : AppCompatActivity() {
             }
         }
 
-        // --- LÓGICA DEL FOOTER (reutilizada) ---
         setupFooter()
     }
 
-    private fun buildCuotaSocio(idSocio: Long?, lastExpirationDate: LocalDate): Cuota {
-        val fechaVencimiento = lastExpirationDate.plusMonths(1)
+    private fun buildCuota(socioId: Long? = null, noSocioId: Long? = null, lastExpirationDate: LocalDate?): Cuota {
+        val fechaVencimiento = lastExpirationDate?.plusMonths(1)
 
-        return Cuota(
-            socioId = idSocio!!,
+        val cuota = Cuota(
+            socioId = socioId,
+            noSocioId = noSocioId,
             fechaPago = LocalDate.now(),
-            fechaVencimiento = fechaVencimiento,
+            fechaVencimiento = fechaVencimiento ?: LocalDate.now(),
             monto = etMonto.text.toString().toDouble(),
             metodoPago = actvMetodoPago.text.toString(),
             actividad = if (toggleGroup.checkedButtonId == R.id.btn_toggle_socio) null else etActividadCobro.text.toString()
         )
+        return cuota
     }
 
     private fun setupFooter() {
@@ -259,7 +266,6 @@ class CobroActivity : AppCompatActivity() {
             esCampoValido
         }
 
-        // Validar DNI
         val dniInt = etDniCobro.text.toString().toIntOrNull()
         val tilDni = etDniCobro.parent.parent as? TextInputLayout
         val dniValido = dniInt != null && !etDniCobro.text.isNullOrBlank()
@@ -269,7 +275,6 @@ class CobroActivity : AppCompatActivity() {
         val metodoPagoValido = !actvMetodoPago.text.isNullOrBlank()
         tilMetodoPago?.error = if (metodoPagoValido) null else "Seleccione un método de pago"
 
-        // Validar monto
         val montoDouble = etMonto.text.toString().toDoubleOrNull()
         val tilMonto = etMonto.parent.parent as? TextInputLayout
         val montoValido = montoDouble != null && montoDouble > 0
@@ -315,7 +320,6 @@ class CobroActivity : AppCompatActivity() {
         etFechaVencimiento.text?.clear()
         etActividadCobro.text?.clear()
 
-        // Limpiar los errores
         (etDniCobro.parent.parent as? TextInputLayout)?.error = null
         (etNombreCobro.parent.parent as? TextInputLayout)?.error = null
         (etApellidoCobro.parent.parent as? TextInputLayout)?.error = null

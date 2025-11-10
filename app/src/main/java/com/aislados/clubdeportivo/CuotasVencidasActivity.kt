@@ -8,10 +8,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.aislados.clubdeportivo.database.AppDatabase
 import com.aislados.clubdeportivo.model.CuotaVencida
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class CuotasActivity : AppCompatActivity() {
+import java.time.LocalDate
+
+class CuotasVencidasActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -23,23 +26,33 @@ class CuotasActivity : AppCompatActivity() {
             insets
         }
 
+        setContentView(R.layout.activity_cuotas)
         val recyclerView = findViewById<RecyclerView>(R.id.rv_cuotas)
-
-        val listaDeCuotas = listOf(
-            CuotaVencida("Juan Giordano", "12/05/2025", "12/05/2025", "$ 22,000.00"),
-            CuotaVencida("Daniel Ortega", "06/09/2025", "06/09/2025", "$ 25,000.00"),
-            CuotaVencida("Carolina Romero", "05/09/2025", "05/09/2025", "$ 25,000.00"),
-            CuotaVencida("Belén Lescano", "06/09/2025", "06/09/2025", "$ 25,000.00"),
-            CuotaVencida("Marcos Alberdi", "01/10/2025", "01/10/2025", "$ 23,500.00"),
-            CuotaVencida("Sofía Rodriguez", "15/08/2025", "15/08/2025", "$ 22,000.00"),
-            CuotaVencida("Lucas Martinez", "20/09/2025", "20/09/2025", "$ 25,000.00"),
-            CuotaVencida("Valentina Gomez", "10/09/2025", "10/09/2025", "$ 22,000.00")
-        )
-
+        val listaDeCuotas = obtenerCuotasVencidas() ?: emptyList()
         val adapter = CuotasAdapter(listaDeCuotas)
         recyclerView.adapter = adapter
-
         setupFooter()
+    }
+
+    private fun obtenerCuotasVencidas(): List<CuotaVencida>? {
+        val db = AppDatabase.getDatabase(this)
+        val cuotaDao = db.cuotaDao()
+        val socioDao = db.socioDao()
+
+        val cuotasVencidas = cuotaDao.getCuotasBySocioIdLastExpired(LocalDate.now())
+
+        return cuotasVencidas.mapNotNull { cuota ->
+            cuota.socioId?.let { socioId ->
+                socioDao.findSocioById(socioId)?.let { socio ->
+                    CuotaVencida(
+                        nombre = "${socio.nombre} ${socio.apellido}",
+                        fechaPago = cuota.fechaPago.toString(),
+                        fechaVencimiento = cuota.fechaVencimiento.toString(),
+                        monto = "$ ${cuota.monto}"
+                    )
+                }
+            }
+        }
     }
 
     private fun setupFooter() {

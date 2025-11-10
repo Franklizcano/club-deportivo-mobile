@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:id="@+id/main"
     android:background="@color/background_dark_variant"
-    tools:context=".CuotasActivity">
+    tools:context=".CuotasVencidasActivity">
 
     <ImageView
         android:layout_width="match_parent"

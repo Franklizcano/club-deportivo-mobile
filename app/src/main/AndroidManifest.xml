@@ -28,7 +28,7 @@
         <activity
             android:name=".CobroActivity" />
         <activity
-            android:name=".CuotasActivity" />
+            android:name=".CuotasVencidasActivity" />
         <activity
             android:name=".LoginActivity"
             android:exported="true">
