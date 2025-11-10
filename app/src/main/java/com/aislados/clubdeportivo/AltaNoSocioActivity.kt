@@ -144,7 +144,6 @@ class AltaNoSocioActivity : AppCompatActivity() {
         }.all { it }
     }
 
-<<<<<<< HEAD
     private fun clearFields() {
         etNombre.text?.clear()
         etApellido.text?.clear()
@@ -155,9 +154,6 @@ class AltaNoSocioActivity : AppCompatActivity() {
         etEmail.text?.clear()
     }
 
-
-=======
->>>>>>> main
     private fun setupFooter() {
         val btnAtras = findViewById<LinearLayout>(R.id.btn_atras)
         val btnMenuPrincipal = findViewById<LinearLayout>(R.id.btn_menu_principal)
