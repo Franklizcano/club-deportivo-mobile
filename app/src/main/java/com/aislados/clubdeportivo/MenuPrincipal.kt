@@ -40,7 +40,7 @@ class MenuPrincipal : AppCompatActivity() {
 
         val btnCuotas = findViewById<LinearLayout>(R.id.btn_cuotas)
         btnCuotas.setOnClickListener {
-            val intent = Intent(this, CuotasActivity::class.java)
+            val intent = Intent(this, CuotasVencidasActivity::class.java)
             startActivity(intent)
         }
     }

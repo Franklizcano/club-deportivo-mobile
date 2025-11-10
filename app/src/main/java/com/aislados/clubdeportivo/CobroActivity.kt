@@ -162,30 +162,29 @@ class CobroActivity : AppCompatActivity() {
             if (validateFields()) {
                 if (toggleGroup.checkedButtonId == R.id.btn_toggle_socio) {
                     if (primerPago) {
-                        val idSocio = socioDao.createSocio(socio!!)
-                        userDao.createUser(user!!.copy(socioId = idSocio))
-                        cuotaDao.createCuota(buildCuota(idSocio, LocalDate.now()))
+                        val socioId = socioDao.createSocio(socio!!)
+                        userDao.createUser(user!!.copy(socioId = socioId))
+                        cuotaDao.createCuota(buildCuota(socioId, lastExpirationDate = LocalDate.now()))
                         val intent = Intent(this, MenuPrincipal::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(intent)
                         finish()
                     } else {
-                        val idSocio = socioDao.findSocioByDni(etDniCobro.text.toString().toInt())!!.id
-                        val ultimaCuotaPaga = cuotaDao.findCuotaBySocioIdOrderByIdDesc(idSocio)
-                        cuotaDao.createCuota(buildCuota(idSocio, ultimaCuotaPaga!!.fechaVencimiento))
+                        val socioId = socioDao.findSocioByDni(etDniCobro.text.toString().toInt())!!.id
+                        val ultimaCuotaPaga = cuotaDao.findCuotaBySocioIdOrderByIdDesc(socioId)
+                        cuotaDao.createCuota(buildCuota(socioId = socioId, lastExpirationDate = ultimaCuotaPaga!!.fechaVencimiento))
                     }
                 } else {
                     if (primerPago) {
-                        val idNoSocio = noSocioDao.createNoSocio(noSocio!!)
-                        userDao.createUser(user!!.copy(socioId = idNoSocio))
-                        cuotaDao.createCuota(buildCuota(idNoSocio, LocalDate.now()))
+                        val noSocioId = noSocioDao.createNoSocio(noSocio!!)
+                        cuotaDao.createCuota(buildCuota(noSocioId = noSocioId, lastExpirationDate = null))
                         val intent = Intent(this, MenuPrincipal::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(intent)
                         finish()
                     } else {
-                        val idNoSocio = noSocioDao.findNoSocioByDni(etDniCobro.text.toString().toInt())!!.id
-                        cuotaDao.createCuota(buildCuota(idNoSocio, null))
+                        val noSocioId = noSocioDao.findNoSocioByDni(etDniCobro.text.toString().toInt())!!.id
+                        cuotaDao.createCuota(buildCuota(noSocioId = noSocioId, lastExpirationDate = null))
                     }
                 }
                 Toast.makeText(this, "Pago registrado exitosamente", Toast.LENGTH_SHORT).show()
@@ -198,17 +197,19 @@ class CobroActivity : AppCompatActivity() {
         setupFooter()
     }
 
-    private fun buildCuota(idSocio: Long, lastExpirationDate: LocalDate?): Cuota {
+    private fun buildCuota(socioId: Long? = null, noSocioId: Long? = null, lastExpirationDate: LocalDate?): Cuota {
         val fechaVencimiento = lastExpirationDate?.plusMonths(1)
 
-        return Cuota(
-            socioId = idSocio,
+        val cuota = Cuota(
+            socioId = socioId,
+            noSocioId = noSocioId,
             fechaPago = LocalDate.now(),
             fechaVencimiento = fechaVencimiento ?: LocalDate.now(),
             monto = etMonto.text.toString().toDouble(),
             metodoPago = actvMetodoPago.text.toString(),
             actividad = if (toggleGroup.checkedButtonId == R.id.btn_toggle_socio) null else etActividadCobro.text.toString()
         )
+        return cuota
     }
 
     private fun setupFooter() {

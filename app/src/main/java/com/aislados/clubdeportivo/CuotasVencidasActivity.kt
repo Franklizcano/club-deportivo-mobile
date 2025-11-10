@@ -8,30 +8,27 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aislados.clubdeportivo.database.AppDatabase
 import com.aislados.clubdeportivo.model.CuotaVencida
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
-class CuotasActivity : AppCompatActivity() {
+class CuotasVencidasActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cuotas)
         val recyclerView = findViewById<RecyclerView>(R.id.rv_cuotas)
-        val listaDeCuotas = obtenerCuotasVencidas()
+        val listaDeCuotas = obtenerCuotasVencidas() ?: emptyList()
         val adapter = CuotasAdapter(listaDeCuotas)
         recyclerView.adapter = adapter
         setupFooter()
     }
 
-    private fun obtenerCuotasVencidas(): List<CuotaVencida> {
+    private fun obtenerCuotasVencidas(): List<CuotaVencida>? {
         val db = AppDatabase.getDatabase(this)
         val cuotaDao = db.cuotaDao()
         val socioDao = db.socioDao()
 
-        val cuotasVencidas = cuotaDao.getAllCuotas().filter { cuota ->
-            cuota.fechaVencimiento.isBefore(LocalDate.now())
-        }
+        val cuotasVencidas = cuotaDao.getCuotasBySocioIdLastExpired(LocalDate.now())
 
         return cuotasVencidas.mapNotNull { cuota ->
-            cuota.socioId.let { socioId ->
+            cuota.socioId?.let { socioId ->
                 socioDao.findSocioById(socioId)?.let { socio ->
                     CuotaVencida(
                         nombre = "${socio.nombre} ${socio.apellido}",
