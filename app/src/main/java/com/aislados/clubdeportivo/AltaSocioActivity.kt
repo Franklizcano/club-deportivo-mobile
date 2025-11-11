@@ -4,13 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge // --- ¡AÑADIDO! ---
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat // --- ¡AÑADIDO! ---
-import androidx.core.view.WindowInsetsCompat // --- ¡AÑADIDO! ---
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.aislados.clubdeportivo.database.AppDatabase
-import com.aislados.clubdeportivo.database.SocioDAO // --- ¡AÑADIDO! ---
-import com.aislados.clubdeportivo.database.UserDAO // --- ¡AÑADIDO! ---
+import com.aislados.clubdeportivo.database.SocioDAO
+import com.aislados.clubdeportivo.database.UserDAO
 import com.aislados.clubdeportivo.model.Socio
 import com.aislados.clubdeportivo.model.User
 import com.aislados.clubdeportivo.model.UserRole
@@ -121,7 +121,7 @@ class AltaSocioActivity : AppCompatActivity() {
                 nombre = etNombre.text.toString(),
                 apellido = etApellido.text.toString(),
                 dni = dniInt,
-                fechaNacimiento = LocalDate.parse(etFechaNacimiento.text.toString(), DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                fechaNacimiento = LocalDate.parse(etFechaNacimiento.text.toString(), DateTimeFormatter.ISO_LOCAL_DATE),
                 domicilio = etDomicilio.text.toString(),
                 telefono = etTelefono.text.toString(),
                 email = etEmail.text.toString(),
@@ -198,32 +198,15 @@ class AltaSocioActivity : AppCompatActivity() {
             mostrarDialogoDeCierreSesion()
         }
     }
-
-    private fun clearFields() {
-        etNombre.text?.clear()
-        etApellido.text?.clear()
-        etDni.text?.clear()
-        etFechaNacimiento.text?.clear()
-        etDomicilio.text?.clear()
-        etTelefono.text?.clear()
-        etEmail.text?.clear()
-        etUsername.text?.clear()
-        etPassword.text?.clear()
-        cbAptoFisico.isChecked = false
-    }
     private fun mostrarDialogoDeCierreSesion() {
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.dialog_logout_title)
             .setMessage(R.string.dialog_logout_message)
-
-            // Botón "Sí, Cerrar" (Positivo)
             .setPositiveButton(R.string.dialog_logout_positive) { dialog, which ->
                 val intent = Intent(this, LoginActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
             }
-
-            // Botón "Cancelar" (Negativo)
             .setNegativeButton(R.string.dialog_logout_negative) { dialog, which ->
                 dialog.dismiss()
             }

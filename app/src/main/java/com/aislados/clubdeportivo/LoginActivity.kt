@@ -69,9 +69,12 @@ class LoginActivity : AppCompatActivity() {
 
     private fun login(user: User) {
         if(user.role == UserRole.ADMIN) {
-            Intent(this, MenuPrincipal::class.java).also { startActivity(it) }
+            Intent(this, MenuPrincipal::class.java)
+                .also { startActivity(it) }
         } else {
-            Intent(this, CarnetActivity::class.java).also { startActivity(it) }
+            Intent(this, CarnetActivity::class.java)
+                .apply { putExtra("user", user) }
+                .also { startActivity(it) }
         }
     }
 }

@@ -4,12 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge // --- ¡AÑADIDO! ---
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat // --- ¡AÑADIDO! ---
-import androidx.core.view.WindowInsetsCompat // --- ¡AÑADIDO! ---
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.aislados.clubdeportivo.database.AppDatabase
-import com.aislados.clubdeportivo.database.NoSocioDAO // --- ¡AÑADIDO! (Para la variable) ---
+import com.aislados.clubdeportivo.database.NoSocioDAO
 import com.aislados.clubdeportivo.model.NoSocio
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -105,7 +105,7 @@ class AltaNoSocioActivity : AppCompatActivity() {
                 nombre = etNombre.text.toString(),
                 apellido = etApellido.text.toString(),
                 dni = dniInt,
-                fechaNacimiento = LocalDate.parse(etFechaNacimiento.text.toString(), DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                fechaNacimiento = LocalDate.parse(etFechaNacimiento.text.toString(), DateTimeFormatter.ISO_LOCAL_DATE),
                 domicilio = etDomicilio.text.toString(),
                 telefono = etTelefono.text.toString(),
                 email = etEmail.text.toString()

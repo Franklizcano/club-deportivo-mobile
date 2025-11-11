@@ -14,21 +14,16 @@ class MenuPrincipal : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_menu_principal)
 
-
-        // --- ¡AÑADIDO! Lógica para el botón de logout ---
         val btnLogout = findViewById<ImageView>(R.id.iv_logout)
         btnLogout.setOnClickListener {
             mostrarDialogoDeCierreSesion()
         }
 
-        // --- Botones del Menú ---
         val btnRegistro = findViewById<LinearLayout>(R.id.btn_registro)
         btnRegistro.setOnClickListener {
             val intent = Intent(this, RegistroActivity::class.java)
             startActivity(intent)
         }
-
-        // val btnCarnet = findViewById<LinearLayout>(R.id.btn_carnet)
 
         val btnCobro = findViewById<LinearLayout>(R.id.btn_pago)
         btnCobro.setOnClickListener {
