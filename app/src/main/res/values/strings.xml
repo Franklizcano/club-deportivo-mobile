@@ -7,7 +7,7 @@
     <string name="login_title">SISTEMA DE GESTIÓN\n DEL\n CLUB DEPORTIVO</string>
     <string name="menu_principal_title">MENÚ\nPRINCIPAL</string>
     <string name="menu_registro">Registro</string>
-    <string name="menu_carnet">Entregar Carnet</string>
+    <string name="menu_carnet">Carnet</string>
     <string name="menu_pago">Cobro</string>
     <string name="menu_cuotas">Cuotas Vencidas</string>
     <string name="description_logout">Cerrar sesión</string>
@@ -38,7 +38,7 @@
     <string name="form_email">Email</string>
     <string name="form_actividad">Actividad</string>
 
-    <string name="entrega_carnet_title">ENTREGA DE CARNET</string>
+    <string name="mi_carnet_title">MI CARNET</string>
     <string name="form_estado">Estado</string>
     <string name="form_emitir_carnet">EMITIR CARNET</string>
 
@@ -54,4 +54,10 @@
 
     <string name="cuotas_vencidas_title">CUOTAS VENCIDAS</string>
     <string name="form_buscar_socio">Buscar Socio</string>
+    <string name="form_nro_socio">N° de Socio</string>
+
+    <string name="dialog_logout_title">Confirmar Cierre</string>
+    <string name="dialog_logout_message">¿Estás seguro de que deseas cerrar la sesión?</string>
+    <string name="dialog_logout_positive">Sí, Cerrar</string>
+    <string name="dialog_logout_negative">Cancelar</string>
 </resources>

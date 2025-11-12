@@ -19,6 +19,19 @@ interface SocioDAO {
     @Query("SELECT * FROM socios")
     fun getAllSocios(): List<Socio>
 
+    @Query("""
+    SELECT CASE
+        WHEN COUNT(*) > 0 AND MAX(fechaVencimiento) < DATE('now') THEN 1
+        ELSE 0
+    END
+    FROM cuotas
+    WHERE socioId = :socioId
+    """)
+    fun tieneCuotaVencida(socioId: Long): Boolean
+
+    @Query("SELECT * FROM socios WHERE id = :socioId")
+    fun findSocioBySocioId(socioId: Long): Socio?
+
     @Query("SELECT * FROM socios WHERE id = :id")
     fun findSocioById(id: Long): Socio?
 

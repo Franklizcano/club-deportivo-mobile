@@ -31,6 +31,20 @@ class LoginActivity : AppCompatActivity() {
         val database = AppDatabase.getDatabase(context = this)
         val userDao = database.userDao()
 
+        val admin = userDao.findUser("admin")
+        if (admin == null) {
+
+            val adminUser = User(
+                id = 0,
+                username = "admin",
+                password = "admin",
+                role = UserRole.ADMIN,
+                socioId = null
+            )
+            userDao.createUser(adminUser)
+        }
+
+
         val button = findViewById<Button>(R.id.button)
         button.setOnClickListener {
             val usernameValue = username.text.toString()
@@ -52,11 +66,15 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun login(user: User) {
         if(user.role == UserRole.ADMIN) {
-            Intent(this, MenuPrincipal::class.java).also { startActivity(it) }
+            Intent(this, MenuPrincipal::class.java)
+                .also { startActivity(it) }
         } else {
-            Intent(this, CarnetActivity::class.java).also { startActivity(it) }
+            Intent(this, CarnetActivity::class.java)
+                .apply { putExtra("USER", user) }
+                .also { startActivity(it) }
         }
     }
 }

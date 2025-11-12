@@ -1,56 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:id="@+id/main" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/background_dark"
-    android:gravity="center_horizontal"
+    android:background="@color/background_dark_variant"
     tools:context=".RegistroActivity">
 
     <ImageView
-        android:id="@+id/iv_logo_registro"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="48dp"
-        android:src="@drawable/logo"
-        android:contentDescription="@string/logo_description"/>
-
-    <TextView
-        android:id="@+id/tv_title_registro"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/registro_title"
-        android:textColor="@color/main_accent"
-        android:textSize="34sp"
-        android:textStyle="bold"/>
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:src="@drawable/bg_header_ellipse"
+        android:layout_marginTop="-100dp"
+        android:contentDescription="@null"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="32dp">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_socio"
-            style="@style/PrimaryButton"
-            android:text="@string/registro_socio"
-            android:layout_marginEnd="16dp"/>
+        <LinearLayout
+            android:id="@+id/header_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:gravity="center_vertical">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_no_socio"
-            style="@style/PrimaryButton"
-            android:text="@string/registro_no_socio"/>
+            <TextView
+                android:id="@+id/tv_title_registro"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/registro_title"
+                android:textColor="@color/main_accent"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/iv_logo_registro"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_marginEnd="16dp"
+                android:contentDescription="@string/logo_description"
+                android:src="@drawable/logo_small" /> </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="75dp" android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/form_background"
+            android:padding="24dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_socio"
+                style="@style/PrimaryButton.Dark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/registro_socio"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_no_socio"
+                style="@style/PrimaryButton.Dark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/registro_no_socio"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <include layout="@layout/layout_bottom_navigation"/>
 
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-    <include layout="@layout/layout_bottom_navigation"/>
-
-</LinearLayout>
+</FrameLayout>
