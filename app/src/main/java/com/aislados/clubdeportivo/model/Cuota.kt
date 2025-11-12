@@ -20,7 +20,7 @@ import java.time.LocalDate
             childColumns = arrayOf("noSocioId"),
             onDelete = ForeignKey.CASCADE
         )],
-    indices = [Index(value = ["socioId"])]
+    indices = [Index(value = ["socioId"]), Index(value = ["noSocioId"])]
 )
 data class Cuota(
     @PrimaryKey(autoGenerate = true)

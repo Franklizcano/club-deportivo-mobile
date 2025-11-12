@@ -1,6 +1,5 @@
 package com.aislados.clubdeportivo
 
-import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
@@ -29,22 +28,23 @@ class CarnetActivity : AppCompatActivity() {
 
         val user = intent.parcelable<User>("USER")
 
-        val ivFotoSocio = findViewById<ImageView>(R.id.iv_foto_socio) // NUEVO
-        val etNroSocio = findViewById<TextInputEditText>(R.id.et_nro_socio) // NUEVO
-        val etDni = findViewById<TextInputEditText>(R.id.et_dni_carnet) // Existía
-        val etNombre = findViewById<TextInputEditText>(R.id.et_nombre_carnet) // Existía
-        val etApellido = findViewById<TextInputEditText>(R.id.et_apellido_carnet) // Existía
-        val etEstado = findViewById<TextInputEditText>(R.id.et_estado_carnet) // Existía
+        val ivFotoSocio = findViewById<ImageView>(R.id.iv_foto_socio)
+        val etNroSocio = findViewById<TextInputEditText>(R.id.et_nro_socio)
+        val etDni = findViewById<TextInputEditText>(R.id.et_dni_carnet)
+        val etNombre = findViewById<TextInputEditText>(R.id.et_nombre_carnet)
+        val etApellido = findViewById<TextInputEditText>(R.id.et_apellido_carnet)
+        val etEstado = findViewById<TextInputEditText>(R.id.et_estado_carnet)
 
         val database = AppDatabase.getDatabase(this)
         val socioDao = database.socioDao()
-        val socio = socioDao.getSocioBySocioId(user?.id ?: 0)
+        val socio = socioDao.findSocioById(user?.socioId ?: 0)
+        val estadoSocio = socioDao.tieneCuotaVencida(user?.socioId ?: 0)
 
-
-        etNroSocio.setText(user?.id.toString())
-        etDni.setText(user?.dni.toString())
-        etNombre.setText(user?.nombre.toString())
-        etApellido.setText(user?.apellido.toString())
+        etNroSocio.setText(socio?.id.toString())
+        etDni.setText(socio?.dni.toString())
+        etNombre.setText(socio?.nombre.toString())
+        etApellido.setText(socio?.apellido.toString())
+        etEstado.setText(if (estadoSocio) "En mora" else "Activo")
 
         val btnAtras = findViewById<LinearLayout>(R.id.btn_atras)
         val btnMenuPrincipal = findViewById<LinearLayout>(R.id.btn_menu_principal)

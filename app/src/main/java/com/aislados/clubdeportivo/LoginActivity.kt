@@ -73,7 +73,7 @@ class LoginActivity : AppCompatActivity() {
                 .also { startActivity(it) }
         } else {
             Intent(this, CarnetActivity::class.java)
-                .apply { putExtra("user", user) }
+                .apply { putExtra("USER", user) }
                 .also { startActivity(it) }
         }
     }

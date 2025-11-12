@@ -29,7 +29,7 @@ interface SocioDAO {
     """)
     fun tieneCuotaVencida(socioId: Long): Boolean
 
-    @Query("SELECT * FROM socios WHERE socioId = :socioId")
+    @Query("SELECT * FROM socios WHERE id = :socioId")
     fun findSocioBySocioId(socioId: Long): Socio?
 
     @Query("SELECT * FROM socios WHERE id = :id")

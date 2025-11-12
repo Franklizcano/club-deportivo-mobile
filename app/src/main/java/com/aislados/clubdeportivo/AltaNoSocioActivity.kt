@@ -75,7 +75,7 @@ class AltaNoSocioActivity : AppCompatActivity() {
                 val timeZone = TimeZone.getDefault()
                 val offset = timeZone.getOffset(utcMillis)
                 val localDate = Date(utcMillis + offset)
-                val sdf = SimpleDateFormat("dd/MM/yyyy", Locale("es", "AR"))
+                val sdf = SimpleDateFormat("yyyy/MM/dd", Locale("es", "AR"))
                 etFechaNacimiento.setText(sdf.format(localDate))
             }
             datePicker.show(supportFragmentManager, "DATE_PICKER")
@@ -105,7 +105,7 @@ class AltaNoSocioActivity : AppCompatActivity() {
                 nombre = etNombre.text.toString(),
                 apellido = etApellido.text.toString(),
                 dni = dniInt,
-                fechaNacimiento = LocalDate.parse(etFechaNacimiento.text.toString(), DateTimeFormatter.ISO_LOCAL_DATE),
+                fechaNacimiento = LocalDate.parse(etFechaNacimiento.text.toString(), DateTimeFormatter.ofPattern("yyyy/MM/dd")),
                 domicilio = etDomicilio.text.toString(),
                 telefono = etTelefono.text.toString(),
                 email = etEmail.text.toString()
