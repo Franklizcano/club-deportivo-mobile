@@ -2,6 +2,8 @@ package com.aislados.clubdeportivo
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -11,10 +13,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aislados.clubdeportivo.database.AppDatabase
 import com.aislados.clubdeportivo.model.CuotaVencida
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-
+import com.google.android.material.textfield.TextInputEditText
 import java.time.LocalDate
 
 class CuotasVencidasActivity : AppCompatActivity() {
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var etBuscarSocio: TextInputEditText
+    private lateinit var adapter: CuotasAdapter
+    private var listaDeCuotasCompleta: List<CuotaVencida> = emptyList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -26,12 +34,35 @@ class CuotasVencidasActivity : AppCompatActivity() {
             insets
         }
 
-        setContentView(R.layout.activity_cuotas)
-        val recyclerView = findViewById<RecyclerView>(R.id.rv_cuotas)
-        val listaDeCuotas = obtenerCuotasVencidas() ?: emptyList()
-        val adapter = CuotasAdapter(listaDeCuotas)
+        recyclerView = findViewById(R.id.rv_cuotas)
+        etBuscarSocio = findViewById(R.id.et_buscar_socio)
+        listaDeCuotasCompleta = obtenerCuotasVencidas() ?: emptyList()
+        adapter = CuotasAdapter(listaDeCuotasCompleta)
         recyclerView.adapter = adapter
+
+        setupSearchListener()
         setupFooter()
+    }
+
+    private fun setupSearchListener() {
+        etBuscarSocio.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                filterList(s?.toString() ?: "")
+            }
+        })
+    }
+
+    private fun filterList(query: String) {
+        val filteredList = if (query.isEmpty()) {
+            listaDeCuotasCompleta
+        } else {
+            listaDeCuotasCompleta.filter { cuota ->
+                cuota.nombre.contains(query, ignoreCase = true)
+            }
+        }
+        adapter.updateList(filteredList)
     }
 
     private fun obtenerCuotasVencidas(): List<CuotaVencida>? {
@@ -71,7 +102,9 @@ class CuotasVencidasActivity : AppCompatActivity() {
         btnCerrarSesion.setOnClickListener {
             mostrarDialogoDeCierreSesion()
         }
+
     }
+
     private fun mostrarDialogoDeCierreSesion() {
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.dialog_logout_title)

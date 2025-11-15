@@ -29,14 +29,14 @@
         android:contentDescription="@string/logo_description"/>
 
     <TextView
-        android:layout_width="76dp"
+        android:layout_width="94dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="80dp"
         android:text="@string/username_label"
         android:textColor="@color/text_white"
-        android:layout_marginTop="80dp"
-        android:layout_marginStart="28dp"
-        android:layout_gravity="start"
-        android:textSize="18sp"/>
+        android:textSize="18sp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="355dp"
@@ -53,14 +53,14 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:layout_width="95dp"
+        android:layout_width="121dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="30dp"
         android:text="@string/password_label"
         android:textColor="@color/text_white"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="28dp"
-        android:layout_gravity="start"
-        android:textSize="18sp"/>
+        android:textSize="18sp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="355dp"

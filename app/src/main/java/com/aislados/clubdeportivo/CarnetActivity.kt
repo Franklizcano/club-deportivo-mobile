@@ -46,17 +46,7 @@ class CarnetActivity : AppCompatActivity() {
         etApellido.setText(socio?.apellido.toString())
         etEstado.setText(if (estadoSocio) "En mora" else "Activo")
 
-        val btnAtras = findViewById<LinearLayout>(R.id.btn_atras)
-        val btnMenuPrincipal = findViewById<LinearLayout>(R.id.btn_menu_principal)
         val btnCerrarSesion = findViewById<LinearLayout>(R.id.btn_cerrar_sesion)
-
-        btnAtras.setOnClickListener { finish() }
-
-        btnMenuPrincipal.setOnClickListener {
-            val intent = Intent(this, MenuPrincipal::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent)
-        }
 
         btnCerrarSesion.setOnClickListener {
             mostrarDialogoDeCierreSesion()

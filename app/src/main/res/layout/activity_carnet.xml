@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/main"
     android:background="@color/background_dark_variant"
     tools:context=".CarnetActivity">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:src="@drawable/bg_header_ellipse"
         android:layout_marginTop="-100dp"
-        android:contentDescription="@null"/>
+        android:contentDescription="@null"
+        android:src="@drawable/bg_header_ellipse" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,9 +24,9 @@
             android:id="@+id/header_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="16dp"
-            android:gravity="center_vertical">
+            android:padding="16dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -49,97 +48,129 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="20dp"> <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/form_background"
-            android:padding="24dp">
+            android:layout_marginTop="20dp"
+            android:layout_weight="1">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/iv_foto_socio"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="24dp"
-                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-                android:src="@drawable/ic_default_profile"
-                android:scaleType="centerCrop"
-                app:strokeColor="@color/main_accent"
-                app:strokeWidth="2dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/form_background"
+                android:orientation="vertical"
+                android:padding="24dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/FormInputLayout"
-                android:enabled="false"
-                android:hint="@string/form_nro_socio">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_nro_socio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:textColor="@color/color_light_gray"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/iv_foto_socio"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="24dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_default_profile"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                    app:strokeColor="@color/main_accent"
+                    app:strokeWidth="2dp" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/FormInputLayout"
-                android:layout_marginTop="16dp"
-                android:enabled="false"
-                android:hint="@string/form_dni">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_dni_carnet"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:textColor="@color/color_light_gray"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/FormInputLayout"
+                    android:enabled="false"
+                    android:hint="@string/form_nro_socio">
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/FormInputLayout"
-                android:layout_marginTop="16dp"
-                android:enabled="false"
-                android:hint="@string/form_nombre">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_nombre_carnet"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:textColor="@color/color_light_gray"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_nro_socio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:textColor="@color/color_light_gray" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/FormInputLayout"
-                android:layout_marginTop="16dp"
-                android:enabled="false"
-                android:hint="@string/form_apellido">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_apellido_carnet"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:textColor="@color/color_light_gray"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/FormInputLayout"
+                    android:layout_marginTop="16dp"
+                    android:enabled="false"
+                    android:hint="@string/form_dni">
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/FormInputLayout"
-                android:layout_marginTop="16dp"
-                android:enabled="false"
-                android:hint="@string/form_estado">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_estado_carnet"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:textColor="@color/color_light_gray"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_dni_carnet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:textColor="@color/color_light_gray" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-        </LinearLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/FormInputLayout"
+                    android:layout_marginTop="16dp"
+                    android:enabled="false"
+                    android:hint="@string/form_nombre">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_nombre_carnet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:textColor="@color/color_light_gray" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/FormInputLayout"
+                    android:layout_marginTop="16dp"
+                    android:enabled="false"
+                    android:hint="@string/form_apellido">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_apellido_carnet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:textColor="@color/color_light_gray" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/FormInputLayout"
+                    android:layout_marginTop="16dp"
+                    android:enabled="false"
+                    android:hint="@string/form_estado">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_estado_carnet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:textColor="@color/color_light_gray" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
         </ScrollView>
 
-        <include layout="@layout/layout_bottom_navigation"/>
+        <LinearLayout
+            android:id="@+id/bottom_navigation_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background_dark"
+            android:elevation="4dp"
+            android:orientation="horizontal"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <LinearLayout
+                android:id="@+id/btn_cerrar_sesion"
+                style="@style/BottomNavOption">
+
+                <ImageView
+                    style="@style/BottomNavOption.Icon"
+                    android:clickable="false"
+                    android:contentDescription="@string/bottom_nav_logout"
+                    android:focusable="false"
+                    android:src="@drawable/ic_logout_app" />
+
+                <TextView
+                    style="@style/BottomNavOption.Text"
+                    android:text="@string/bottom_nav_logout" />
+            </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
 </FrameLayout>
