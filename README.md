@@ -259,5 +259,5 @@ Si encuentras problemas o tienes preguntas:
 
 ---
 
-**Última actualización**: Noviembre 2024  
+**Última actualización**: Noviembre 2025  
 **Versión**: 1.0.0
