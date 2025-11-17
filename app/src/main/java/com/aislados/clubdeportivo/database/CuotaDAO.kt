@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.aislados.clubdeportivo.model.Cuota
-import java.time.LocalDate
 
 @Dao
 interface CuotaDAO {
@@ -21,14 +20,16 @@ interface CuotaDAO {
 
     @Query("""
     SELECT c.* FROM cuotas c
-    INNER JOIN (
-        SELECT socioId, MAX(fechaVencimiento) as maxFecha
+    WHERE c.socioId IS NOT NULL
+    AND c.id IN (
+        SELECT MAX(id)
         FROM cuotas
-        WHERE fechaVencimiento < :fechaActual
+        WHERE socioId IS NOT NULL
         GROUP BY socioId
-    ) latest ON c.socioId = latest.socioId AND c.fechaVencimiento = latest.maxFecha
+    )
+    ORDER BY c.fechaVencimiento ASC 
     """)
-    fun getCuotasBySocioIdLastExpired(fechaActual: LocalDate): List<Cuota>
+    fun getLastCuotaForEachSocio(): List<Cuota>?
 
     @Query("DELETE FROM cuotas WHERE id = :id")
     fun deleteCuotaById(id: Long): Int

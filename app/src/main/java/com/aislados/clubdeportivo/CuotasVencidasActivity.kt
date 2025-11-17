@@ -36,12 +36,18 @@ class CuotasVencidasActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.rv_cuotas)
         etBuscarSocio = findViewById(R.id.et_buscar_socio)
-        listaDeCuotasCompleta = obtenerCuotasVencidas() ?: emptyList()
-        adapter = CuotasAdapter(listaDeCuotasCompleta)
+        adapter = CuotasAdapter(emptyList())
         recyclerView.adapter = adapter
 
         setupSearchListener()
         setupFooter()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        listaDeCuotasCompleta = obtenerCuotasVencidas() ?: emptyList()
+        adapter.updateList(listaDeCuotasCompleta)
+        etBuscarSocio.text?.clear()
     }
 
     private fun setupSearchListener() {
@@ -70,9 +76,14 @@ class CuotasVencidasActivity : AppCompatActivity() {
         val cuotaDao = db.cuotaDao()
         val socioDao = db.socioDao()
 
-        val cuotasVencidas = cuotaDao.getCuotasBySocioIdLastExpired(LocalDate.now())
+        val ultimasCuotasDeCadaSocio = cuotaDao.getLastCuotaForEachSocio()
+        val fechaActual = LocalDate.now()
 
-        return cuotasVencidas.mapNotNull { cuota ->
+        val cuotasVencidas = ultimasCuotasDeCadaSocio?.filter { cuota ->
+            cuota.fechaVencimiento < fechaActual
+        }
+
+        return cuotasVencidas?.mapNotNull { cuota ->
             cuota.socioId?.let { socioId ->
                 socioDao.findSocioById(socioId)?.let { socio ->
                     CuotaVencida(
