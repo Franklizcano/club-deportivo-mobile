@@ -57,16 +57,13 @@ class CobroActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         setContentView(R.layout.activity_cobro)
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // Encontrar todos los componentes del layout
         tvTitle = findViewById(R.id.tv_cobro_title)
         toggleGroup = findViewById(R.id.toggle_button_group)
         socioFieldsContainer = findViewById(R.id.socio_fields_container)
@@ -91,13 +88,11 @@ class CobroActivity : AppCompatActivity() {
         // Iniciar con la opción "Socio" seleccionada
         tvTitle.text = getString(R.string.cobro_cuota_socio_title)
         toggleGroup.check(R.id.btn_toggle_socio)
-
         val database = AppDatabase.getDatabase(this)
         val socioDao: SocioDAO = database.socioDao()
         val noSocioDao: NoSocioDAO = database.noSocioDao()
         val cuotaDao: CuotaDAO = database.cuotaDao()
         val userDao: UserDAO = database.userDao()
-
         val socio = intent.parcelable<Socio>("SOCIO")
         val user = intent.parcelable<User>("USER")
         val noSocio = intent.parcelable<NoSocio>("NO_SOCIOS")
@@ -149,27 +144,50 @@ class CobroActivity : AppCompatActivity() {
         val adapterMetodos = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, metodosDePago)
         actvMetodoPago.setAdapter(adapterMetodos)
 
-        // --- LÓGICA DE BÚSQUEDA ---
         tilDniCobro.setEndIconOnClickListener {
-            Toast.makeText(this, "Buscando DNI...", Toast.LENGTH_SHORT).show()
-            if (etDniCobro.text.toString().isEmpty()) {
+            val dniString = etDniCobro.text.toString()
+
+            if (dniString.isEmpty()) {
                 Toast.makeText(this, "Por favor, ingrese un DNI", Toast.LENGTH_SHORT).show()
-            } else {
-                val socio = socioDao.findSocioByDni(etDniCobro.text.toString().toInt())
-                socio.let {
-                    etNombreCobro.setText(socio?.nombre)
-                    etApellidoCobro.setText(socio?.apellido)
+                return@setEndIconOnClickListener
+            }
+
+            val dniInt = dniString.toIntOrNull()
+            if (dniInt == null) {
+                Toast.makeText(this, "El DNI ingresado no es un número válido", Toast.LENGTH_SHORT).show()
+                return@setEndIconOnClickListener
+            }
+
+            Toast.makeText(this, "Buscando DNI: $dniInt...", Toast.LENGTH_SHORT).show()
+
+            if (toggleGroup.checkedButtonId == R.id.btn_toggle_socio) {
+                val socio = socioDao.findSocioByDni(dniInt)
+                if (socio != null) {
+                    etNombreCobro.setText(socio.nombre)
+                    etApellidoCobro.setText(socio.apellido)
                     etDniCobro.isEnabled = false
+
+                    val ultimaCuotaPaga = socio.id.let { cuotaDao.findCuotaBySocioIdOrderByIdDesc(it) }
+                    ultimaCuotaPaga?.let {
+                        etUltimaCuota.setText(it.fechaPago.toString())
+                        etFechaVencimiento.setText(it.fechaVencimiento.toString())
+                    }
+                } else {
+                    Toast.makeText(this, "Socio no encontrado", Toast.LENGTH_SHORT).show()
                 }
-                val ultimaCuotaPaga = socio?.id?.let { cuotaDao.findCuotaBySocioIdOrderByIdDesc(socio.id) }
-                ultimaCuotaPaga?.let {
-                    etUltimaCuota.setText(it.fechaPago.toString())
-                    etFechaVencimiento.setText(it.fechaVencimiento.toString())
+
+            } else {
+                val noSocio = noSocioDao.findNoSocioByDni(dniInt)
+                if (noSocio != null) {
+                    etNombreCobro.setText(noSocio.nombre)
+                    etApellidoCobro.setText(noSocio.apellido)
+                    etDniCobro.isEnabled = false
+                } else {
+                    Toast.makeText(this, "No Socio no encontrado", Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
-        // --- LÓGICA DEL BOTÓN REGISTRAR PAGO ---
         findViewById<MaterialButton>(R.id.btn_registrar_pago).setOnClickListener {
             if (validateFields()) {
                 if (toggleGroup.checkedButtonId == R.id.btn_toggle_socio) {
